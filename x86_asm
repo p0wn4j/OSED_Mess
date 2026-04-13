@@ -108,6 +108,6 @@ _myFunc PROC
 _myFunc ENDP
 
 
-
+ret does pop EIP
 
 
