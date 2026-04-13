@@ -1,0 +1,2 @@
+Print assembly code of GetCurrentThread function from the module kernel32:
+uf kernel32!GetCurrentThread
