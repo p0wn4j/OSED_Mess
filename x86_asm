@@ -1,0 +1,28 @@
+mov eax, [ebx]      ; Move the 4 bytes in memory at the address contained in EBX into EAX
+mov [var], ebx      ; Move the contents of EBX into the 4 bytes at memory address var. (Note, var is a 32-bit constant).
+mov eax, [esi-4]    ; Move 4 bytes at memory address ESI + (-4) into EAX
+mov [esi+eax], cl       ; Move the contents of CL into the byte at address ESI+EAX
+mov edx, [esi+4*ebx]    ; Move the 4 bytes of data at address ESI+4*EBX into EDX
+
+==============================
+
+mov BYTE PTR [ebx], 2   ; Move 2 into the single byte at the address stored in EBX.
+mov WORD PTR [ebx], 2   ; Move the 16-bit integer representation of 2 into the 2 bytes starting at the address in EBX.
+mov DWORD PTR [ebx], 2  ; Move the 32-bit integer representation of 2 into the 4 bytes starting at the address in EBX. 
+
+==============================
+The lea instruction places the address specified by its second operand into the register specified by it first operand. 
+Note, the CONTENTS of the MEMORY LOCATION are NOT LOADED, only the effective address is computed and placed into the register. 
+This is useful for obtaining a pointer into a memory region.
+
+Syntax
+  lea <reg32>, <mem>
+Examples
+  lea edi, [ebx+4*esi]    ;the quantity EBX+4*ESI is placed in EDI.
+  lea eax, [var]          ;the value in var is placed in EAX.
+  lea eax, [val]          ;the value val is placed in EAX.
+==============================
+
+Addition example:
+add eax, 10             ;EAX ← EAX + 10
+add BYTE PTR [var], 10  ;add 10 to the single byte stored at memory address var 
