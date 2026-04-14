@@ -45,7 +45,7 @@ pop edi — pop the top element of the stack into EDI.
 pop [ebx] — pop the top element of the stack into memory at the four bytes starting at location EBX.
 
 pop algorithm:
-mov [ESP], <pop operand>
+mov <pop operand>, [ESP]
 ESP = ESP + 4
 
 ==============================
