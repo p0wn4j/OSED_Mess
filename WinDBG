@@ -1,2 +1,6 @@
 Print assembly code of GetCurrentThread function from the module kernel32:
 uf kernel32!GetCurrentThread
+
+
+dds (Display Words and Symbols) displays memory contents as 4-byte DWORDS and maps those values to symbols.
+ds (Display String) displays formatted STRING or ANSI_STRING structures
