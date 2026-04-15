@@ -12,3 +12,4 @@ Specifies a pattern that the module name must match
 
 lm m libssp
 
+In WinDbg, the t command is used to Trace (STEP INTO) the next instruction or source line, p (Step Over).
