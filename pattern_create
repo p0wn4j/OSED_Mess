@@ -8,6 +8,6 @@ r1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7
 
 msf-pattern_offset -1 800 -q 42306142    # 42306142 is BOaB
 [*] Exact match at offset 780            # this means str[780] = B str[781] = 0 str[782] = a str[783] = B
-
+(indicating that our buffer is overflown by 780 bytes)
 So for the crash in the python code choose "A" * 780
 
