@@ -1,10 +1,7 @@
-Print assembly code of GetCurrentThread function from the module kernel32:
-uf kernel32!GetCurrentThread
-
+Print assembly code of GetCurrentThread function from the module kernel32: uf kernel32!GetCurrentThread
 
 dds (Display Words and Symbols) displays memory contents as 4-byte DWORDS and maps those values to symbols.
 ds (Display String) displays formatted STRING or ANSI_STRING structures
-
 
 list modules (lm):
 m Pattern
@@ -19,3 +16,5 @@ Search for bytes in module
 s -b 10000000 10223000 0xff 0xe4 ; searching for jmp esp 
 -b bytes
 s -b <start address> <end address>
+
+WinDbg allows us to automatically list the current thread exception handler chain with !exchain
