@@ -18,3 +18,5 @@ s -b 10000000 10223000 0xff 0xe4 ; searching for jmp esp
 s -b <start address> <end address>
 
 WinDbg allows us to automatically list the current thread exception handler chain with !exchain
+
+Let's inspect the callstack: k
