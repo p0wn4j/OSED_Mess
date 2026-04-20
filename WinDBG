@@ -19,4 +19,11 @@ s -b <start address> <end address>
 
 WinDbg allows us to automatically list the current thread exception handler chain with !exchain
 
-Let's inspect the callstack: k
+Let's inspect the callstack: k (k shows call stack)
+
+To install narly, download narly.zip extract it, put dll in some folder and then load from windbg
+.load C:\Tools\narly.dll
+
+The extension loads and immediately presents us with the available commands. In this case,
+narly only supports the !nmod command. Executing! nmod outputs a list o f all loaded modules
+and their memory protections
