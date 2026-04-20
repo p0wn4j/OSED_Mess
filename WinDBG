@@ -1,29 +1,37 @@
 Print assembly code of GetCurrentThread function from the module kernel32: uf kernel32!GetCurrentThread
-
+======
 dds (Display Words and Symbols) displays memory contents as 4-byte DWORDS and maps those values to symbols.
 ds (Display String) displays formatted STRING or ANSI_STRING structures
 
+dds esp
+dds esp L8 (lines count 8)
+======
 list modules (lm):
 m Pattern
 Specifies a pattern that the module name must match
 
 lm m libssp
-
+======
 In WinDbg, the t command is used to Trace (STEP INTO) the next instruction or source line, p (Step Over).
-
+======
 Search for bytes in module
 
 s -b 10000000 10223000 0xff 0xe4 ; searching for jmp esp 
 -b bytes
-s -b <start address> <end address>
+s -b <start address> <end address> bytes
 
+Command: s [-[type]] [range] [pattern]
+Example (Search for ASCII string on current stack):
+s -a @rsp L1000 "SearchString" (searches 0x1000 bytes starting from the stack pointer).
+======
 WinDbg allows us to automatically list the current thread exception handler chain with !exchain
-
+======
 Let's inspect the callstack: k (k shows call stack)
-
+======
 To install narly, download narly.zip extract it, put dll in some folder and then load from windbg
 .load C:\Tools\narly.dll
 
 The extension loads and immediately presents us with the available commands. In this case,
-narly only supports the !nmod command. Executing! nmod outputs a list o f all loaded modules
+narly only supports the !nmod command. Executing! nmod outputs a list of all loaded modules
 and their memory protections
+======
