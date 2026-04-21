@@ -35,3 +35,7 @@ The extension loads and immediately presents us with the available commands. In 
 narly only supports the !nmod command. Executing! nmod outputs a list of all loaded modules
 and their memory protections
 ======
+Print exceptions linked list chain for SEH exploitation
+!exchain
+
+result with 0x41414141 or smth like that is an indicator of SEH overflow
