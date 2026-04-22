@@ -1,0 +1,12 @@
+Check injected payload in whole stack
+
+1)!teb
+example:
+StackBase    0x01720000 
+StackLimit   0x0171e000
+
+2) search payload bytes in stack range
+
+s -b StackLimit StackBase <bytes>
+example:
+s -b 0x0171e000 0x01720000 0x43 0x43 0x43 0x43 --> search for CCCC
