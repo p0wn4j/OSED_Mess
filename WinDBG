@@ -6,6 +6,10 @@ ds (Display String) displays formatted STRING or ANSI_STRING structures
 dds esp
 dds esp L8 (lines count 8)
 ======
+du 	Unicode characters. Each line displays up to 48 characters. 
+The display continues until the first null byte or until all characters in range have been displayed. 
+All nonprintable characters, such as carriage returns and line feeds, are displayed as periods (.).
+======
 list modules (lm):
 m Pattern
 Specifies a pattern that the module name must match
