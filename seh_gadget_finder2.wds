@@ -1,0 +1,62 @@
+$$ Usage:
+$$   0:000> $$>a<\\Mac\Home\OSED\scripts\find_esp_plus_8_windbg.wds <start_address> <end_address>
+$$
+$$ Arguments:
+$$   ${$arg1} = start address
+$$   ${$arg2} = end address
+
+.block {
+
+    .echo === find_esp_plus_8.wds START ===
+    .printf "args: start=%p end=%p\n", ${$arg1}, ${$arg2}
+
+    r $t18 = ${$arg1}
+    r $t19 = ${$arg2}
+
+    .printf "range: %p .. %p\n", $t18, $t19
+
+    .printf "\n[add esp, 0x08 ; ret]\n"
+    s-[1]b $t18 $t19 83 c4 08 c3
+
+    .printf "\n[add esp, 0x04 ; add esp, 0x04 ; ret]\n"
+    s-[1]b $t18 $t19 83 c4 04 83 c4 04 c3
+
+    .printf "\n[pop reg32 ; add esp, 0x04 ; ret]\n"
+    .for (r $t0 = 0x58; $t0 <= 0x5f; r $t0 = $t0 + 1)
+    {
+        .if ($t0 == 0x5c)
+        {
+            .continue
+        }
+        s-[1]b $t18 $t19 $t0 83 c4 04 c3
+    }
+
+    .printf "\n[add esp, 0x04 ; pop reg32 ; ret]\n"
+    .for (r $t0 = 0x58; $t0 <= 0x5f; r $t0 = $t0 + 1)
+    {
+        .if ($t0 == 0x5c)
+        {
+            .continue
+        }
+        s-[1]b $t18 $t19 83 c4 04 $t0 c3
+    }
+
+    .printf "\n[pop reg32 ; pop reg32 ; ret]\n"
+    .for (r $t0 = 0x58; $t0 <= 0x5f; r $t0 = $t0 + 1)
+    {
+        .if ($t0 == 0x5c)
+        {
+            .continue
+        }
+        .for (r $t1 = 0x58; $t1 <= 0x5f; r $t1 = $t1 + 1)
+        {
+            .if ($t0 == 0x5c)
+            {
+                .continue
+            }
+            s-[1]b $t18 $t19 $t0 $t1 c3
+        }
+    }
+
+    .echo === find_esp_plus_8.wds END ===
+}
