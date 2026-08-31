@@ -17,3 +17,10 @@ example:
 s -b 0x0171e000 0x01720000 0x43 0x43 0x43 0x43 --> search for CCCC
 
 ===========
+Step‑by‑step SEH exploit development (Windows 10+):
+
+Generate a crash with a long string (e.g., 5000 ‘A’s) and identify the offset where SEH chain is overwritten (use `!exchain` in WinDBG).
+Overwrite `handler` pointer with a `POP POP RET` gadget address from a non-ASLR module (e.g., msvcrt.dll).
+Place your shellcode after the SEH record, using a short jump to bypass the 4‑byte gap.
+Bypass SafeSEH: Ensure the gadget address is not in a safe-seh list – check with `!load msec; !find_safeseh` in WinDBG.
+===========
