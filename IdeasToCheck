@@ -1,3 +1,8 @@
+===========
+VERY IMPORTANT:
+After injecting the payload scan the whole stack for the payload bytes, 
+because they can be in several unexpected places where you can have more MEMORY!!!!!!!!
+
 Check injected payload in whole stack
 
 1)!teb
@@ -10,3 +15,5 @@ StackLimit   0x0171e000
 s -b StackLimit StackBase <bytes>
 example:
 s -b 0x0171e000 0x01720000 0x43 0x43 0x43 0x43 --> search for CCCC
+
+===========
