@@ -32,3 +32,13 @@ to avoid zero number, we can xor itself some register and use the register value
 
 xor ebx, ebx 
 mov dword ptr fs:[ebx], esp
+
+4) add to 32 bit register constant number
+
+mov eax, [esp+0c]
+
+you can change to:
+
+push 0x0c     
+pop ecx     
+mov eax, [esp+ecx]
