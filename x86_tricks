@@ -1,0 +1,26 @@
+Avoid NULL bytes tricks:
+========================
+1)
+mov ecx, 2
+
+is 5 bytes with NULLs: B9 02 00 00 00
+we can change it to:
+
+push 02
+pop ecx
+
+6A02 --> push 02
+59   --> pop ecx
+
+2) use negative value then negate it
+
+example:
+
+mov eax, 1C6h  --> B8 C6 01 00 00
+instead you can negate 1C6h:
+? 0x00 - 0x1C6 = fffffe3a
+
+change code to:
+
+mov eax, fffffe3a
+neg eax
