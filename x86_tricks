@@ -24,3 +24,11 @@ change code to:
 
 mov eax, fffffe3a
 neg eax
+
+3) if we want to use 0 value:
+mov dword ptr fs:[0], esp
+
+to avoid zero number, we can xor itself some register and use the register value:
+
+xor ebx, ebx 
+mov dword ptr fs:[ebx], esp
