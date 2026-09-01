@@ -1,3 +1,5 @@
+# call example python egghunter_generator.py --egg w00t --ntaccess 1c6 --egghunter
+
 import sys
 import os
 import argparse
