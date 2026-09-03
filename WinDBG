@@ -27,6 +27,8 @@ s -b <start address> <end address> bytes
 Command: s [-[type]] [range] [pattern]
 Example (Search for ASCII string on current stack):
 s -a @rsp L1000 "SearchString" (searches 0x1000 bytes starting from the stack pointer).
+
+s -a 0 L1000 "w00tw00t"
 ======
 WinDbg allows us to automatically list the current thread exception handler chain with !exchain
 ======
