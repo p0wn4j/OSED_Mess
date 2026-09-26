@@ -24,3 +24,6 @@ Overwrite `handler` pointer with a `POP POP RET` gadget address from a non-ASLR 
 Place your shellcode after the SEH record, using a short jump to bypass the 4‑byte gap.
 Bypass SafeSEH: Ensure the gadget address is not in a safe-seh list – check with `!load msec; !find_safeseh` in WinDBG.
 ===========
+
+It is possible that during the buffer overflow some bytes in the stack can be mangled, for example in the Savant.exe
+we send \xeb\x1c: jmp short 0x1c but the \xeb is converted to \xcb in the app, which is a different opcode. 
