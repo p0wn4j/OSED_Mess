@@ -1,0 +1,13 @@
+But how/where exactly do I start ?
+
+The first things you have to do, before writing a single line of code, is setting your strategy, by asking yourself the following questions :
+
+    What technique (Windows API) will I use to bypass DEP and what are the consequences in terms of stack setup / parameters 
+    that need to be created on the stack. What is the current DEP policy and what are your options in terms of bypassing it ?
+
+    What are the rop gadgets I can use ?  (This will be your toolbox and will allow you to craft your stack.)
+
+    How to start the chain ? How to pivot to your controlled buffer ?  
+    (In a direct RET exploit, you most likely control ESP, so you can simply overwrite EIP with a pointer to RETN to kick start the chain)
+
+    How will you craft the stack ?
