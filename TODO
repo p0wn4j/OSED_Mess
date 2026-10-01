@@ -1,0 +1,2 @@
+- list all printf family functions
+- research how WinAPI different function parameter types are pushed into stack (structs and its memory layouts)
