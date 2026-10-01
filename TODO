@@ -1,2 +1,3 @@
 - list all printf family functions
 - research how WinAPI different function parameter types are pushed into stack (structs and its memory layouts)
+- list as much SEH gadgets as possible (not only p/p/r ones, but esp+8, esp+10, ...)
