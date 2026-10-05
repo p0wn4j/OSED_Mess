@@ -2,3 +2,5 @@
 - research how WinAPI different function parameter types are pushed into stack (structs and its memory layouts)
 - list as much SEH gadgets as possible (not only p/p/r ones, but ESP + 8, ESP + 14, ESP + 1c, ESP + 2c ...)
 - collect stack buffer overflow sinks with code examples
+- collect different EggHunters (from corelan, etc)
+- collect different custom shellcodes
