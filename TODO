@@ -4,3 +4,4 @@
 - collect stack buffer overflow sinks with code examples
 - collect different EggHunters (from corelan, etc)
 - collect different custom shellcodes
+- colelct different ROP tactics
