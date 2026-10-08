@@ -10,6 +10,8 @@ du 	Unicode characters. Each line displays up to 48 characters.
 The display continues until the first null byte or until all characters in range have been displayed. 
 All nonprintable characters, such as carriage returns and line feeds, are displayed as periods (.).
 ======
+The "pt" command executes the program until a return instruction is reached
+======
 list modules (lm):
 m Pattern
 Specifies a pattern that the module name must match
