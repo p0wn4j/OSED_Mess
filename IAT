@@ -1,0 +1,57 @@
+https://www.corelan.be/index.php/2011/12/01/roads-iat/
+
+IAT SCRIPT
+Script for checking Import Address Table under the WinDbg.
+
+Save it on C:/ as iat.wds — a source.
+
+=============================================
+r $t0 = poi(${$arg1}+poi(${$arg1}+0x3c)+0xd8)
+r $t1 = poi(${$arg1}+poi(${$arg1}+0x3c)+0xdc)
+dps ${$arg1}+$t0 l? (($t1+4)/4)
+
+Use it in WinDbg like this:
+
+$$>a<c:\iat.wds app_name
+=============================================
+example:
+
+0:000> $$>a< test1.txt notepad
+00121000  760e14d6 ADVAPI32!RegSetValueExWStub
+00121004  760e46ad ADVAPI32!RegQueryValueExWStub
+00121008  760e469d ADVAPI32!RegCloseKeyStub
+0012100c  760e1514 ADVAPI32!RegCreateKeyW
+00121010  760e468d ADVAPI32!RegOpenKeyExWStub
+00121014  760e448e ADVAPI32!IsTextUnicode
+00121018  760e369c ADVAPI32!CloseServiceHandleStub
+0012101c  760db537 ADVAPI32!QueryServiceConfigWStub
+00121020  760dca4c ADVAPI32!OpenServiceWStub
+00121024  760dca64 ADVAPI32!OpenSCManagerWStub
+00121028  00000000
+0012102c  763d55de kernel32!FindNLSStringStub
+00121030  763ba125 kernel32!GlobalAllocStub
+00121034  763ba183 kernel32!GlobalUnlock
+00121038  763ba235 kernel32!GlobalLock
+0012103c  763bafc0 kernel32!GetTimeFormatW
+00121040  763bb1a2 kernel32!GetDateFormatW
+00121044  763baaef kernel32!GetLocalTimeStub
+00121048  763b2b7b kernel32!GetUserDefaultUILanguageStub
+0012104c  763bc3c0 kernel32!HeapFree
+00121050  77a82dd6 ntdll!RtlAllocateHeap
+00121054  763bfcdd kernel32!GetProcessHeapStub
+00121058  763bbdad kernel32!GetFileInformationByHandleStub
+0012105c  763bc452 kernel32!InterlockedExchangeStub
+00121060  763b0368 kernel32!FreeLibraryAndExitThreadStub
+00121064  763c4c14 kernel32!GetFileAttributesWStub
+00121068  763ffd71 kernel32!Wow64RevertWow64FsRedirectionStub
+... <snip> ...
+001213e0  77a64168 ntdll!RtlInitUnicodeString
+001213e4  77a760f8 ntdll!NtQueryLicenseValue
+001213e8  77a504a5 ntdll!WinSqmAddToStream
+001213ec  00000000
+001213f0  74f91a15 VERSION!GetFileVersionInfoExW
+001213f4  74f918e9 VERSION!GetFileVersionInfoSizeExW
+001213f8  74f91b51 VERSION!VerQueryValueW
+001213fc  00000000
+00121400  90909090
+
