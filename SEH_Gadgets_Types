@@ -1,0 +1,87 @@
+https://iphelix.medium.com/getting-from-seh-to-nseh-5b9bdb481c72
+============== Gadget examples from SEH to nSEH =======================
+
+pop reg/pop reg/ret
+
+add esp, 4/add esp, 4/ret
+
+pop reg/add esp, 4/ret
+add esp, 4/pop reg/ret
+
+add esp,[8/14/1c/...]/ret  ( add esp, 8/ret | add esp, 14/ret | add esp, 1c/ret | ...)
+add ebp,[c/24/30...]/ret
+
+jmp dword ptr [esp + nn] nn = 8/14/1c/...
+call dword ptr [esp + nn] nn = 8/14/1c/...
+
+jmp dword ptr [ebp + nn] nn = c/24/30...
+call dword ptr [ebp + nn] nn = c/24/30...
+
+popad/call ebp
+popad/jmp ebp
+
+popad/call edx
+popad/jmp edx
+
+popad/call eax
+popad/jmp eax 
+
+=============== Memory layout during _exception_handler calls (ESP register)======================
+0:000> dd /c1 esp
+0012f84c  7c9032a8
+0012f850  0012f934
+0012f854  0012fe7c ; nseh - esp + 8
+0012f858  0012f950
+0012f85c  0012f908
+0012f860  0012fe7c ; nseh - esp + 14
+0012f864  7c9032bc
+0012f868  0012fe7c ; nseh - esp + 1c
+0012f86c  0012f91c
+0012f870  7c90327a
+0012f874  0012f934
+0012f878  0012fe7c ; nseh - esp + 2c
+0012f87c  0012f950
+0012f880  0012f908
+0012f884  43434343
+0012f888  00130000
+0012f88c  0012f934
+0012f890  0012fe7c ; nseh - esp + 44
+0012f894  7c92a8c3
+0012f898  0012f934
+0012f89c  0012fe7c ; nseh - esp + 50
+=============== Memory layout during _exception_handler calls (EBP register)======================
+0:000> dd /c1 ebp
+0012f86c  0012f91c
+0012f870  7c90327a
+0012f874  0012f934
+0012f878  0012fe7c ; nseh - ebp + c (also esp + 2c)
+0012f87c  0012f950
+0012f880  0012f908
+0012f884  43434343
+0012f888  00130000
+0012f88c  0012f934
+0012f890  0012fe7c ; nseh - ebp + 24 (also esp + 44)
+0012f894  7c92a8c3
+0012f898  0012f934
+0012f89c  0012fe7c ; nseh - ebp + 30 (also esp + 50)
+=============== Memory layout during _exception_handler calls (POPAD technique)====================
+0:000> dd /c1 esp
+0012f84c  7c9032a8 ; -----> EDI
+0012f850  0012f934 ; -----> ESI
+0012f854  0012fe7c ; -----> EBP [ESP + 8]
+0012f858  0012f950 ; skipped
+0012f85c  0012f908 ; -----> EBX
+0012f860  0012fe7c ; -----> EDX [ESP + 14]
+0012f864  7c9032bc ; -----> ECX
+0012f868  0012fe7c ; <----- EAX [ESP + 1c]
+
+popad algorithm:
+EDI ← Pop();
+ESI ← Pop();
+EBP ← Pop();
+increment ESP by 4 (* skip next 4 bytes of stack * ESP ← Pop() is just moves ESP + 4, without poping into ESP any value ) 
+EBX ← Pop();
+EDX ← Pop();
+ECX ← Pop();
+EAX ← Pop();
+
