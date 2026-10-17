@@ -24,11 +24,9 @@ Examples
   lea eax, [var]          ;the value in var is placed in EAX.
   lea eax, [val]          ;the value val is placed in EAX.
 ==============================
-
 Addition example:
 add eax, 10             ;EAX ← EAX + 10
 add BYTE PTR [var], 10  ;add 10 to the single byte stored at memory address var 
-
 ==============================
 
 push first DECREMENTS ESP by 4, then places its OPERAND into the contents of the 32-bit location at address [ESP]
@@ -113,4 +111,24 @@ _myFunc ENDP
 
 ret does pop EIP
 
+==============================
+The POPAD instruction (Pop All Doubleword) is an x86 assembly language instruction that pops 32-bit values 
+from the stack into the eight general-purpose registers in reverse order.
 
+• Order of Registers Popped: Values are popped from the top of the stack and loaded into registers in this specific sequence:
+	1. DI / EDI
+	2. SI / ESI
+	3. BP / EBP
+	4. SP / ESP (Note: The value popped into ESP is discarded rather than written to the register)
+	5. DX / EDX
+	6. CX / ECX
+	7. AX / EAX
+
+EDI ← Pop();
+ESI ← Pop();
+EBP ← Pop();
+increment ESP by 4 (* skip next 4 bytes of stack *)
+EBX ← Pop();
+EDX ← Pop();
+ECX ← Pop();
+EAX ← Pop();
