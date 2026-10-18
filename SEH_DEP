@@ -1,0 +1,9 @@
+https://skybulk.github.io/security/2019/07/14/seh-rop.html
+
+To bypass DEP we will need some things to build our ROP chain for the SEH vulnerability and execute our code successfully
+
+    Pop/pop/ret is not Possible
+    Code execution on stack failed
+    ROP chain
+    Bypass execution prevention
+    Way to return to our payload
