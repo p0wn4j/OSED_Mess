@@ -7,3 +7,7 @@ To bypass DEP we will need some things to build our ROP chain for the SEH vulner
     ROP chain
     Bypass execution prevention
     Way to return to our payload
+
+==== Stack Pivot Gadgets ====
+
+https://github.com/mrtouch93/OSED-Notes/blob/main/5.dep_bypass/README.md#dep-bypass
