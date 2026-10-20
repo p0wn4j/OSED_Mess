@@ -4,4 +4,6 @@
 - collect stack buffer overflow sinks with code examples
 - collect different EggHunters (from corelan, etc)
 - collect different custom shellcodes
-- colelct different ROP tactics
+- collect different ROP tactics
+- look in the metasploit for shellcode types
+- create automations from win32-shellcode.pdf
