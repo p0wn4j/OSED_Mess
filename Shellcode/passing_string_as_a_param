@@ -1,0 +1,59 @@
+1) we push the string + '\0' backwards to the stack (this can change based on length % 4)
+for instance (string ws2_32.dll):
+    " load_ws2_32:                       "  #
+    "   xor   eax, eax                  ;"  #   Null EAX
+    "   mov   ax, 0x6c6c                ;"  #   Move the end of the string in AX
+    "   push  eax                       ;"  #   Push EAX on the stack with string NULL terminator
+    "   push  0x642e3233                ;"  #   Push part of the string on the stack
+    "   push  0x5f327377                ;"  #   Push another part of the string on the stack
+    "   push  esp                       ;"  #   Push ESP to have a pointer to the string
+    
+2) when we need to pass the address later we can do
+2.1) 
+after 
+push esp
+do
+pop <reg>
+
+and then when we need to pass a parameter we do push <reg>
+push esp
+pop ebx
+...
+...
+push ebx
+
+"   call_message_box:          ;",
+push_string("MessageBox Caption", "eax", "esi"),
+push_string("Hello World", "eax", "edi"),
+"       mov al, 0x01           ;",
+"       push eax               ;",
+"       push esi               ;",
+"       push edi               ;",
+"       xor eax, eax           ;",
+"       push eax           ;",
+
+2.2) or save the address in a variable and then pass it as a parameter, t
+his situation can arise when the function will receive many string parameters and there aren't that much register that can we use at that moment
+
+v_header = "msgbox_header"
+v_text = "msgbox_text"
+
+# string must be aligned to a multiple of 4 before pushing to the stack
+
+var.add(v_header, reserve=max(0x10, var.align_dword(len(header) + 1)))
+var.add(v_text, reserve=max(0x10, var.align_dword(len(text) + 1)))
+
+in the assembler part:
+
+"   create_header_string:                ",  # build the message-box caption in writable memory
+var.set_variable_data(v_header, header),
+"   create_text_string:                  ",  # build the message-box body in writable memory
+var.set_variable_data(v_text, text),
+
+"   call_messageboxa:                    ",  # MessageBoxA(NULL, text, header, MB_OK)
+"       xor eax, eax                    ;",
+"       push eax                        ;",
+var.push_var_address(v_header, "ebx"),
+var.push_var_address(v_text, "ebx"),
+"       push eax                        ;",
+var.call_function(f_msgbox),
