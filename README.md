@@ -6,3 +6,6 @@ Position-Independent Code (PIC) must run correctly no matter where it is loaded 
 Because standard CALL opcodes use relative offsets, they actually help make shellcode position-independent 
 when jumping within the shellcode itself. 
 The exact memory location does not matter; the distance between the instructions remains constant.
+
+WINAPI data types:
+https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types
