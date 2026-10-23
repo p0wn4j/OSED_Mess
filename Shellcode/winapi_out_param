@@ -1,0 +1,55 @@
+int WSAStartup(
+  [in]  WORD      wVersionRequired,
+  [out] LPWSADATA lpWSAData
+);
+
+WSADATA socketdata;
+WSAStartup(MAKEWORD(2, 2), &socketdata);
+
+LPWSADATA itself is a pointer, so we need to push the address, 
+but before that we must allocate a memory from the stack.
+For that at first we need to check the WSADATA struct's length.
+
+typedef struct WSAData {
+  WORD           wVersion;
+  WORD           wHighVersion;
+#if ...
+  unsigned short iMaxSockets;
+#if ...
+  unsigned short iMaxUdpDg;
+#if ...
+  char           *lpVendorInfo;
+#if ...
+  char           szDescription[WSADESCRIPTION_LEN + 1];
+#if ...
+  char           szSystemStatus[WSASYS_STATUS_LEN + 1];
+#else
+  char           szDescription[WSADESCRIPTION_LEN + 1];
+#endif
+#else
+  char           szSystemStatus[WSASYS_STATUS_LEN + 1];
+#endif
+#else
+  unsigned short iMaxSockets;
+#endif
+#else
+  unsigned short iMaxUdpDg;
+#endif
+#else
+  char           *lpVendorInfo;
+#endif
+} WSADATA;
+
+then allocate a memory:
+
+v_lpWSAData = "lpWSAData"
+var.add(v_lpWSAData, reserve=0x190)
+
+and during the call, pass the address as a parameter
+
+"   call_wsastartup:                    ",  # initialize winsock with version 2.2
+var.push_var_address(v_lpWSAData),
+"       xor eax, eax                    ;",
+"       mov ax, 0x0202                  ;",
+"       push eax                        ;",
+var.call_function(f_wsastartup),
