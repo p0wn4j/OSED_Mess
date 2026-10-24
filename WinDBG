@@ -62,3 +62,13 @@ result with 0x41414141 or smth like that is an indicator of SEH overflow
 ======
 0:000> ?? sizeof(ntdll!_TEB)
 unsigned int 0x1000
+======
+change register value
+0:000> dd esp L1
+003cb710  00000000
+
+0:000> ed esp 41414141
+
+0:000> dd esp L1
+003cb710  41414141
+
