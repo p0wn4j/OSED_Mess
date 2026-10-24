@@ -72,3 +72,7 @@ change register value
 0:000> dd esp L1
 003cb710  41414141
 
+also
+We can also modify ECX with r ecx= followed by the new register value.
+0:000> r ecx=41414141
+
