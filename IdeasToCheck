@@ -1,4 +1,11 @@
 ===========
+If you have a crash script with a buffer size 800 that can crash and you need some space for shellcode try to change buffersize from 800 to 1500 for example.
+===========
+when you check for bad chars, look at the buffer with db command (display bytes, for not looking in reverse order)
+0:009> db esp - 10 L20
+01bc744c  41 41 41 41 41 41 41 41-42 42 42 42 01 02 03 04  AAAAAAAABBBB....
+01bc745c  05 06 07 08 09 00 d9 00-40 6f da 00 e8 74 d9 00  ........@o...t..
+===========
 VERY IMPORTANT:
 After injecting the payload scan the whole stack for the payload bytes, 
 because they can be in several unexpected places where you can have more MEMORY!!!!!!!!
