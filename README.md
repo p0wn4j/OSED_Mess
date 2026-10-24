@@ -9,3 +9,9 @@ The exact memory location does not matter; the distance between the instructions
 
 WINAPI data types:
 https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+
+The issue: The FPU environment data is written to the memory address pointed to by the ESP register. 
+If your NOP sled is placed directly before the payload and you jump straight to it, your ESP might be 
+pointing right inside your shellcode. 
+When fnstenv executes, it will overwrite the payload code further down the stream with its own state data, 
+corrupting the payload before it can finish decoding.
