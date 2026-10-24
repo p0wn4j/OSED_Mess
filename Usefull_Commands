@@ -12,3 +12,16 @@ negative jump example
 
 nasm > jmp $-0x8fc
 00000000  E9FFF6FFFF        jmp 0xfffff704
+============
+alternative way for pattern generation (in a case msf-pattern_create will produce bad chars)
+
+from pwn import *
+
+# Generate
+pattern = cyclic(2000)
+print(pattern)
+
+# After crash, find offset
+offset = cyclic_find(0x39694438)
+print(f"Offset: {offset}")
+============
