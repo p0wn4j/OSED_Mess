@@ -59,3 +59,6 @@ result with 0x41414141 or smth like that is an indicator of SEH overflow
 75100050  70207369 72676f72 63206d61 6f6e6e61  is program canno
 75100060  65622074 6e757220 206e6920 20534f44  t be run in DOS 
 75100070  65646f6d 0a0d0d2e 00000024 00000000  mode....$.......
+======
+0:000> ?? sizeof(ntdll!_TEB)
+unsigned int 0x1000
