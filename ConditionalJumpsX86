@@ -30,11 +30,11 @@ Its bit pattern is 0xFFFFFFFD. Thus, SF = 1 and ZF = 0. For this subtraction, CF
 Notice that a negative mathematical result is not stored by cmp; 
 it is the conceptual subtraction result that determines the flags.
 
-|-----------------------------------------------|
-| Instruction	    Equivalent alias	  Condition |
-| JE	            JZ	                ZF = 1    |
-| JNE	            JNZ	                ZF = 0    |
-|-----------------------------------------------|
+-----------------------------------------------
+ Instruction	    Equivalent alias	  Condition 
+ JE	              JZ	                ZF = 1    
+ JNE	            JNZ	                ZF = 0    
+-----------------------------------------------
 =====================================================================================================================
 TEST performs a bitwise AND but discards the result. It updates flags based on that result, clearing CF and OF.
 
