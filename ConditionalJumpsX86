@@ -45,3 +45,18 @@ If EAX is zero: 0 AND 0=0: so ZF = 1 and jz jumps.
 
 If EAX is nonzero, at least one bit is set, so the AND result is nonzero, ZF = 0, and the jump isn't taken.
 =====================================================================================================================
+Signed comparisons
+Signed integers conventionally use two's-complement representation.
+
+Instruction	         Condition	         Meaning after cmp a, b
+JL	                  SF ≠ OF	           a<b
+JGE	                 SF = OF	           a>=b
+JLE	                 SF ≠ OF or ZF = 1	 a<=b
+JG	                  SF = OF and ZF = 0	a>b
+
+Aliases:
+- JNGE = JL
+- JNL = JGE
+- JNG = JLE
+- JNLE = JG
+=====================================================================================================================
