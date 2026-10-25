@@ -1,0 +1,47 @@
+=====================================================================================================================
+Flags
+
+Flag	Name	          Meaning
+ZF	  Zero Flag	      The result was zero.
+CF	  Carry Flag	    An unsigned carry or borrow occurred.
+SF	  Sign Flag	      The result's most significant bit is 1.
+OF	  Overflow Flag	  Signed arithmetic overflow occurred.
+PF	  Parity Flag	    The low byte of the result has even parity.
+AF	  Auxiliary Carry	Carry between bits 3 and 4; mainly relevant to BCD-related instructions.
+=====================================================================================================================
+cmp destination, source
+
+the CPU calculates the subtraction: R = destination - source
+to update the status flags, but it discards R
+--------------------
+mov eax, 5
+cmp eax, 5
+
+5 - 5 = 0 => ZF = 1. A subsequent "je" will jump, while a subsequent "jne" will not.
+--------------------
+mov eax, 5
+cmp eax, 8
+
+The subtraction is conceptually 5 - 8 = -3
+
+For a 32-bit subtraction, the result is represented modulo 2^32: -3 mod 2^32 = 2^32 - 3
+
+Its bit pattern is 0xFFFFFFFD. Thus, SF = 1 and ZF = 0. For this subtraction, CF = 1 and OF = 0 as well.
+Notice that a negative mathematical result is not stored by cmp; 
+it is the conceptual subtraction result that determines the flags.
+
+|-----------------------------------------------|
+| Instruction	    Equivalent alias	  Condition |
+| JE	            JZ	                ZF = 1    |
+| JNE	            JNZ	                ZF = 0    |
+|-----------------------------------------------|
+=====================================================================================================================
+TEST performs a bitwise AND but discards the result. It updates flags based on that result, clearing CF and OF.
+
+test eax, eax
+jz   is_zero
+
+If EAX is zero: 0 AND 0=0: so ZF = 1 and jz jumps.
+
+If EAX is nonzero, at least one bit is set, so the AND result is nonzero, ZF = 0, and the jump isn't taken.
+=====================================================================================================================
