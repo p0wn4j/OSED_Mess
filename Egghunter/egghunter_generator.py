@@ -145,7 +145,7 @@ def main():
     ap = argparse.ArgumentParser(description="Egghunter generator for Windows x86")
     ap.add_argument("-t", "--tag", required=True, help="TAG (ej: w00t)")
     ap.add_argument("-v", "--variant", choices=["old", "seh"], default="old")
-    ap.add_argument("-s", "--syscall", type=parse_syscall_id, default=0x2, help="Syscall ID hex string (e.g. 0x1C9)")
+    ap.add_argument("-s", "--syscall", type=parse_syscall_id, default=0x1C6, help="Syscall ID hex string (e.g. 0x1C6)")
     ap.add_argument("-n", "--negate", action="store_true", help="Use NEG to avoid null bytes")
     ap.add_argument(
         "-b",
