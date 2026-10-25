@@ -1,5 +1,8 @@
 # OSED_Mess
 
+Whenever we are dealing with a limited amount of space, we should first attempt to 
+increase the size of the buffer we send to determine if this results in more space for our overflow.
+
 The Problem for Position-Independent Shellcode
 
 Position-Independent Code (PIC) must run correctly no matter where it is loaded into memory.
