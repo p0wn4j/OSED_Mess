@@ -76,4 +76,16 @@ change register value
 also
 We can also modify ECX with r ecx= followed by the new register value.
 0:000> r ecx=41414141
+=====
+During Egghunter SEH edition debug process, every time we hit an unmapped memory page or one we don't have access to, we get an access violation, which halts the debugger.
+
+Fortunately for us, these can be temporarily disabled in WinDbg. To avoid stopping the execution for every "first time" exception, we'll use the sxd command to disable them. This will also disable guard pages.
+
+0:003> sxd av
+
+0:003> sxd gp
+
+0:003> bc *
+
+0:003> g
 
