@@ -4,6 +4,8 @@
 - collect stack buffer overflow sinks with code examples
 - collect different EggHunters (from corelan, etc)
 - encoded egghunter
+https://www.offsec.com/metasploit-unleashed/alphanumeric-shellcode/
+https://www.exploit-db.com/exploits/46334
 - collect different custom shellcodes
 - collect different ROP tactics
 - look in the metasploit for shellcode types
