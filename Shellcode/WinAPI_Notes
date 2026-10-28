@@ -1,1 +1,3 @@
 URLDownloadToFile() writes objects in the cache and returns cached result
+Call DeleteUrlCacheEntry with the same URL just prior to calling URLDownloadToFile. You will need to link against Wininet.dll
+
