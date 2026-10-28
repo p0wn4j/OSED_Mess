@@ -22,6 +22,7 @@ pop ebx
 ...
 push ebx
 
+=== ALWAYS CALL push_string AT THE TOP OF THE FUNCTION ===
 "   call_message_box:          ;",
 push_string("MessageBox Caption", "eax", "esi"),
 push_string("Hello World", "eax", "edi"),
@@ -32,8 +33,8 @@ push_string("Hello World", "eax", "edi"),
 "       xor eax, eax           ;",
 "       push eax           ;",
 
-2.2) or save the address in a variable and then pass it as a parameter, t
-his situation can arise when the function will receive many string parameters and there aren't that much register that can we use at that moment
+2.2) or save the address in a variable and then pass it as a parameter, this situation 
+can arise when the function will receive many string parameters and there aren't that much register that can we use at that moment
 
 v_header = "msgbox_header"
 v_text = "msgbox_text"
