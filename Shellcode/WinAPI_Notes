@@ -15,6 +15,6 @@ URLDownloadToFile() writes objects in the cache and returns cached result
 Call DeleteUrlCacheEntry with the same URL just prior to calling URLDownloadToFile. You will need to link against Wininet.dll
 
 URLDownloadToFileA + CreateProcessA: the classic download-and-execute dropper.
-InternetOpenA + InternetOpenUrlA + InternetReadFile: read a file from an HTTP server into memory instead of writing to disk.
+InternetOpenA + InternetOpenUrlA + InternetReadFile
 
 
