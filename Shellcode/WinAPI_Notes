@@ -9,6 +9,7 @@ WinAPI docs
 https://github.com/VFPX/Win32API/tree/master/libraries
 https://github.com/MicrosoftDocs/win32/tree/docs/desktop-src
 
+
 ========================================================================================================================
 URLDownloadToFile() writes objects in the cache and returns cached result
 Call DeleteUrlCacheEntry with the same URL just prior to calling URLDownloadToFile. You will need to link against Wininet.dll
