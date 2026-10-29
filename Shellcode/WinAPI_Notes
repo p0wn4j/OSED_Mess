@@ -1,3 +1,15 @@
+Reversed WinAPI source code
+https://doxygen.reactos.org/
+https://doxygen.reactos.org/d1/d59/win32_2ws2__32_2src_2startup_8c.html
+
+WinAPI data types
+https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+
+WinAPI docs
+https://github.com/VFPX/Win32API/tree/master/libraries
+https://github.com/MicrosoftDocs/win32/tree/docs/desktop-src
+
+========================================================================================================================
 URLDownloadToFile() writes objects in the cache and returns cached result
 Call DeleteUrlCacheEntry with the same URL just prior to calling URLDownloadToFile. You will need to link against Wininet.dll
 
