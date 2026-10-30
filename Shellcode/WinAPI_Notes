@@ -11,10 +11,16 @@ https://github.com/MicrosoftDocs/win32/tree/docs/desktop-src
 
 
 ========================================================================================================================
+URLDownloadToFileA + CreateProcessA: the classic download-and-execute dropper.
 URLDownloadToFile() writes objects in the cache and returns cached result
 Call DeleteUrlCacheEntry with the same URL just prior to calling URLDownloadToFile. You will need to link against Wininet.dll
 
-URLDownloadToFileA + CreateProcessA: the classic download-and-execute dropper.
+
 InternetOpenA + InternetOpenUrlA + InternetReadFile
+https://www.vbforums.com/showthread.php?176316-InternetOpenURL()-InternetReadFile()-problem-download-running-away-(wininet-dll)
+https://www.pinvoke.dev/kernel32/createfilea
+https://gist.github.com/pcapriotti/2889480
+https://stackoverflow.com/questions/32509678/c-download-file-wininet-0kb-written-to-file
+========================================================================================================================
 
 
