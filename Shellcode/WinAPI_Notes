@@ -9,7 +9,7 @@ WinAPI docs
 https://github.com/VFPX/Win32API/tree/master/libraries
 https://github.com/MicrosoftDocs/win32/tree/docs/desktop-src
 
-
+https://www.hick.org/code/skape/papers/win32-shellcode.pdf
 ========================================================================================================================
 URLDownloadToFileA + CreateProcessA: the classic download-and-execute dropper.
 URLDownloadToFile() writes objects in the cache and returns cached result
