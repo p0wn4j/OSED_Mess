@@ -1,3 +1,5 @@
+# https://github.com/ksecurity45/osed-scripts-1/blob/main/README.md
+
 import argparse
 import pykd 
 import sys
