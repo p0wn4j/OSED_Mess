@@ -11,3 +11,9 @@ The first things you have to do, before writing a single line of code, is settin
     (In a direct RET exploit, you most likely control ESP, so you can simply overwrite EIP with a pointer to RETN to kick start the chain)
 
     How will you craft the stack ?
+
+
+================================
+to filter in vscode:
+
+^0x[0-9a-fA-F]{8}: mov eax, [a-Z]{3} ; ret  ;
