@@ -1,10 +1,28 @@
 https://www.corelan.be/index.php/2011/12/01/roads-iat/
 
+=============================================
+python script to find IAT in WinDBG
+
+.load pykd
+
+!py C:\path_to\find_iat.py <modele_name> <VirtualAllocStub or VirtualProtectStub or WriteProcessMemoryStub>
+-----
+if IAT exists your answer will be:
+
+0:077> !py C:\proofs_of_concept\Module_0x0A\iat_finder.py CSFTPAV6 VirtualAllocStub
+[+] 0x5054a220 (VirtualAllocStub IAT entry)
+
+0:077> dds 0x5054a220 L1
+5054a220  751238c0 KERNEL32!VirtualAllocStub
+-----
+check for bad chars in the IAT entry, if there are, 
+you can try to use IAT + 1 or other math technique to get other address and recover original one
+
+=============================================
 IAT SCRIPT
 Script for checking Import Address Table under the WinDbg.
 
 Save it on C:/ as iat.wds — a source.
-
 =============================================
 r $t0 = poi(${$arg1}+poi(${$arg1}+0x3c)+0xd8)
 r $t1 = poi(${$arg1}+poi(${$arg1}+0x3c)+0xdc)
