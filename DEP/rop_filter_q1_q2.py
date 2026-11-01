@@ -1,3 +1,6 @@
+# https://github.com/0xbad53c/osed-tools/blob/main/README.md
+# run in the windows task machine
+
 #!/usr/bin/python3
 import sys
 import os
@@ -768,4 +771,12 @@ if __name__ == '__main__':
             print("--image-base should be set when using --aslr flag.")
             exit()
 
-    main(args.srcfile, args.bad_bytes, args.aslr, args.dll_name, args.image_base)
+        import codecs
+
+    with open(args.srcfile, "r", encoding="utf-16-le") as f:
+        content = f.read()
+
+    with open("output.txt", "w", encoding="utf-8") as f:
+        f.write(content)
+
+    main("output.txt", args.bad_bytes, args.aslr, args.dll_name, args.image_base)
