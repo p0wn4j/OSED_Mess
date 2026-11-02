@@ -9,6 +9,10 @@ mov dword [esi], ebx
 mov dword [esp+0x10], ebx
 mov edx, ebx
 ....
+
+if you want mov <reg>, eax:
+
+mov\s+[a-zA-Z][a-zA-Z0-9]*\s*,\s*eax
 ========================================
 search for push eax ; <anything not pop> ; pop anything
 
