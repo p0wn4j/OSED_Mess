@@ -1,0 +1,12 @@
+========================================
+Search mov <anything>, ebx for instance:
+
+--- mov\s+.+\s*,\s*ebx ---
+
+result:
+mov dword [eax+0x1C], ebx
+mov dword [esi], ebx
+mov dword [esp+0x10], ebx
+mov edx, ebx
+....
+========================================
