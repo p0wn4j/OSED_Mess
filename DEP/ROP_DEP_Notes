@@ -11,3 +11,6 @@ adc ecx, ebp computes ECX = ECX + EBP + CF.
 
 to be sure that CF is 0 can use clc ; ret gadget 
 clc  ; ret  ; clear carry flag
+
+
+sbb ecx, ebp => ecx = ecx - ebp - cf
