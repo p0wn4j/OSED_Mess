@@ -14,6 +14,10 @@ The first things you have to do, before writing a single line of code, is settin
 
 
 ================================
-to filter in vscode:
+Op code alternatives:
 
-^0x[0-9a-fA-F]{8}: mov eax, [a-Z]{3} ; ret  ;
+add ecx, ebp computes ECX = ECX + EBP.
+adc ecx, ebp computes ECX = ECX + EBP + CF.
+
+to be sure that CF is 0 can use clc ; ret gadget 
+clc  ; ret  ; clear carry flag
