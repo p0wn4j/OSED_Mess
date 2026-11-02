@@ -10,3 +10,4 @@ https://www.exploit-db.com/exploits/46334
 - collect different ROP tactics
 - look in the metasploit for shellcode types
 - create automations from win32-shellcode.pdf
+- look for shellcode ideas from OSEP book
