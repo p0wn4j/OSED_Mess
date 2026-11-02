@@ -13,6 +13,7 @@ adc ecx, ebp computes ECX = ECX + EBP + CF.
 
 to be sure that CF is 0 can use 
 clc ; ret gadget  => clear carry flag
+STC ; ret gadget => set carry flag
 ---------------
 sub ecx, ebp computes ECX = ECX - EBP.
 sbb ecx, ebp => ecx = ecx - ebp - cf
@@ -32,3 +33,9 @@ Zeroize ECX, if we dont have xor ecx, ecx
 pop ecx, ret
 0xFFFFFFFF
 not ecx, ret
+
+================================
+Increment without INC
+
+lea ecx, [ecx + 1]
+
