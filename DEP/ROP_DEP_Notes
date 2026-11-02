@@ -6,6 +6,15 @@ pop ebp
 changes esp, so probably better not to use in the intermediate parameter patching gadgets
 (maybe in the when we must jump to the function in that case can be ok)
 ================================
+[ Address of gadget (retn 0x10) ]
+[ Address of next target         ]  <-- Execution jumps here
+[ Padding (4 bytes) / DUMMY      ]  \
+[ Padding (4 bytes) / DUMMY      ]   |-- Skipped by the `+ 0x10` stack offset
+[ Padding (4 bytes) / DUMMY      ]   |   (Total = 16 bytes / 0x10)
+[ Padding (4 bytes) / DUMMY      ]  /
+[ Address of following gadget    ]  <-- Next real instruction after skip
+Կ
+================================
 Op code alternatives:
 
 add ecx, ebp computes ECX = ECX + EBP.
