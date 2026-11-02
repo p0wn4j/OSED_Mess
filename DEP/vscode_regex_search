@@ -10,3 +10,9 @@ mov dword [esp+0x10], ebx
 mov edx, ebx
 ....
 ========================================
+search for push eax ; <anything not pop> ; pop anything ; anything ; ret
+
+push\s+eax\s*;\s*(?!pop\b)[^;]+\s*;\s*pop\s+[^;]+(?:\s*;\s*pop\s+[^;]+)*\s*;\s*ret
+
+also more simple:
+push\s+eax\s*;\s*(?!pop\b)[^;]+\s*;\s*pop\s+[^;]+(?:\s*;\s*pop\s+[^;]+)*\s*;\s*ret
