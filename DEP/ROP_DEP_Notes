@@ -1,6 +1,8 @@
 leave is same as
+
 mov esp, ebp
 pop ebp
+
 changes esp, so probably better not to use in the intermediate parameter patching gadgets
 (maybe in the when we must jump to the function in that case can be ok)
 ================================
@@ -9,8 +11,14 @@ Op code alternatives:
 add ecx, ebp computes ECX = ECX + EBP.
 adc ecx, ebp computes ECX = ECX + EBP + CF.
 
-to be sure that CF is 0 can use clc ; ret gadget 
-clc  ; ret  ; clear carry flag
-
-
+to be sure that CF is 0 can use 
+clc ; ret gadget  => clear carry flag
+---------------
+sub ecx, ebp computes ECX = ECX - EBP.
 sbb ecx, ebp => ecx = ecx - ebp - cf
+================================
+negate register without NEG operator
+neg ecx =>
+
+not ecx
+inc ecx
