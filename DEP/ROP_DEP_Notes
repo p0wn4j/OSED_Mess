@@ -22,3 +22,13 @@ neg ecx =>
 
 not ecx
 inc ecx
+-------
+xor ecx, 0xFFFFFFFF
+inc ecx
+-------
+================================
+Zeroize ECX, if we dont have xor ecx, ecx
+
+pop ecx, ret
+0xFFFFFFFF
+not ecx, ret
