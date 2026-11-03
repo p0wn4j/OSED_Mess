@@ -44,7 +44,16 @@ pop ecx, ret
 not ecx, ret
 
 ================================
+mov eax, ebx ; ret analogues
+
+push eax; ... ; pop ebx ; ... ret
+
+------------------------
+xor eax, eax ; ret
+add eax, ebx ; ret
+
+================================
 Increment without INC
 
 lea ecx, [ecx + 1]
-
+================================
