@@ -47,9 +47,8 @@ not ecx, ret
 mov eax, ebx ; ret analogues
 
 push eax; ... ; pop ebx ; ... ret
-
-0x100202ce, # mov eax, ebx ; call dword [edx] ;   # ROPNOP address in skeleton, if the [edx] part is controlled in that situation, put ROPNOP address there.
-
+---------------------------------
+mov eax, ebx ; call dword [edx] ;   # ROPNOP address in skeleton, if the [edx] part is controlled in that situation, put ROPNOP address there.
 ------------------------
 xor eax, eax ; ret
 add eax, ebx ; ret
