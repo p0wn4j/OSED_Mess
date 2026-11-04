@@ -11,3 +11,4 @@ https://www.exploit-db.com/exploits/46334
 - look in the metasploit for shellcode types
 - create automations from win32-shellcode.pdf
 - look for shellcode ideas from OSEP book
+- exploring the Win32 APIs helping to leak ASLR base.
