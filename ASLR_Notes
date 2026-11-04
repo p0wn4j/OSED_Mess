@@ -1,0 +1,22 @@
+================================================================================================================
+One of ASLR bypass techniques leverages low entropy. In these cases, since the lower 16 bits of
+a memory address are non-randomized, we may be able to perform a partial overwrite of a return
+address while exploiting a stack overflow condition.
+
+This technique leverages the fact that the CPU reads the address of an instruction in little-endian
+format, while data is often read and written in big-endian format.
+
+For example, assume 0x7F801020 is a hypothetical return address for a function vulnerable to a buffer overflow. 
+
+Although the address would be stored on the stack as the bytes 0x20, 0x10, 0x80, Ox7F, 
+in that order, the CPU would read the address as 0x7F801020.
+
+Imagine that we are able to leverage a buffer overflow where the ESP register points to our
+payload on the stack. In addition, let's assume we found a JMP ESP instruction within the same
+DLL the vulnerable function belongs to, at address 0x7F801122.
+
+If we control the overflow in such a way that we overwrite only the first two bytes of the return
+address with the values 0x11 and 0x22, the CPU will process the partially-overwritten address as
+Ox7F801122. This would effectively transfer the execution to our JMP ESP when the function
+returns, eventually running our shellcode.
+================================================================================================================
