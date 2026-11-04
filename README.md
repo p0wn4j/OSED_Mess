@@ -18,3 +18,5 @@ If your NOP sled is placed directly before the payload and you jump straight to 
 pointing right inside your shellcode. 
 When fnstenv executes, it will overwrite the payload code further down the stream with its own state data, 
 corrupting the payload before it can finish decoding.
+
+CPU reads the address of an instruction in little-endian format, while data is often read and written in big-endian format.
