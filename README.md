@@ -12,6 +12,7 @@ void *memcpy(void *dest, const void *src, size_t n);
 Remember there are NO BAD CHARS due in memcpy call (mostly it's about \x00 bytes).
 
 ==========================================================================
+
 The Problem for Position-Independent Shellcode
 
 Position-Independent Code (PIC) must run correctly no matter where it is loaded into memory.
