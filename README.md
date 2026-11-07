@@ -23,6 +23,7 @@ The exact memory location does not matter; the distance between the instructions
 
 WINAPI data types:
 https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+
 ==========================================================================
 
 The issue: The FPU environment data is written to the memory address pointed to by the ESP register. 
@@ -32,5 +33,7 @@ When fnstenv executes, it will overwrite the payload code further down the strea
 corrupting the payload before it can finish decoding.
 
 ==========================================================================
+
 CPU reads the address of an instruction in little-endian format, while data is often read and written in big-endian format.
+
 ==========================================================================
