@@ -58,3 +58,4 @@ Increment without INC
 
 lea ecx, [ecx + 1]
 ================================
+YOU CAN ALSO TRY gadgets that are ending CALL DWORD [<some_address>] it the call will not harm the state.
