@@ -19,3 +19,6 @@ search for push eax ; <anything not pop> ; pop anything
 
 push\s+eax\s*;(?:\s*[^;]+;)*\s*pop\s+[^;]+
 ========================================
+search for return 0x<5 numbers>
+
+retn\s+0x[0-9A-Fa-f]{5}\b 
