@@ -17,3 +17,16 @@ LEA ESP, [<REG>+offset]; RET
 leave; ret
 push <reg>; pop esp
 xchg esp, <reg>
+
+========================================================================================
+
+In the case of a SEH based exploit, we have to find a way to return to our payload (on the stack in our case) 
+instead of calling a pop pop ret sequence
+
+add esp, offset + ret
+mov esp, register + ret
+xchg register,esp + ret
+call register (if a register points to data you control)
+mov reg,[ebp+0c] + call reg (or other references to seh record)
+push reg + pop esp + ret (if you control 'reg')
+mov reg, dword ptr fs:[0] + ... + ret  (set esp indirectly, via SEH record) 
