@@ -1,0 +1,19 @@
+The ROP technique depends on our ability to control the stack. 
+In many vulnerabilities, ESP does not automatically point to our ROP chain, so we’ll need to modify it as our first step.
+
+If we attempt to overwrite EIP when we do not control the stack, we are typically limited to using
+only a single ROP gadget to pivot to the stack, otherwise we’ll lose control of EIP and the
+application crashes.
+
+Gadget example:
+
+ADD ESP, 0xzzzz; RET
+SUB ESP, 0xzzzz; RET
+
+RETN 0xzzzz
+
+LEA ESP, [<REG>+offset]; RET
+
+leave; ret
+push <reg>; pop esp
+xchg esp, <reg>
