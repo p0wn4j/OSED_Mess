@@ -29,6 +29,37 @@ sbb ecx, ebp => ecx = ecx - ebp - cf
 ---------------
 sometimes when number is smaller byte, you can use or/xor instead of add
 or al, 0x2 ; ret ;
+---------------
+or just use inc <register>
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0; 4
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0; 8
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0; 12
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0;
+0x0582b + binary_base, # inc ecx; ret 0; 16
+0x0582b + binary_base, # inc ecx; ret 0;
+---------------
+or add <register> as much as you need
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
+0x76096 + binary_base, # add eax, 8; ret;
 ================================
 negate register without NEG operator
 neg ecx =>
