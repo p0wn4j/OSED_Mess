@@ -1,0 +1,50 @@
+    # BOOL VirtualProtect(
+    #   LPVOID lpAddress,
+    #   SIZE_T dwSize,
+    #   DWORD  flNewProtect,
+    #   PDWORD lpflOldProtect
+    # );
+    #
+    # skeleton = RopChain()
+    # skeleton += 0x41414141                # VirtualProtect address
+    # skeleton += 0x42424242                # shellcode return address to return to after VirtualProtect is called
+    # skeleton += 0x43434343                # lpAddress (same as above)
+    # skeleton += 0x44444444                # dwSize         (size of shellcode, 0x300 or so)
+    # skeleton += 0x45454545                # flNewProtect   (0x40)
+    # skeleton += 0x46464646                # lpflOldProtect (some writable memory address)
+    # -------------------------
+    # -------------------------
+    # LPVOID VirtualAlloc(
+    #   LPVOID lpAddress,
+    #   SIZE_T dwSize,
+    #   DWORD  flAllocationType,
+    #   DWORD  flProtect
+    # );
+    #
+    # skeleton  = RopChain()
+    # skeleton += 0x41414141                # VirtualAlloc address
+    # skeleton += 0x42424242                # shellcode return address to return to after VirtualAlloc is called
+    # skeleton += 0x43434343                # lpAddress (shellcode address, same as above)
+    # skeleton += 0x44444444                # dwSize           (0x1)
+    # skeleton += 0x45454545                # flAllocationType (0x1000)
+    # skeleton += 0x46464646                # flProtect        (0x40)
+    # -------------------------
+    # -------------------------
+    # BOOL WriteProcessMemory(
+    #   HANDLE  hProcess,
+    #   LPVOID  lpBaseAddress,
+    #   LPCVOID lpBuffer,
+    #   SIZE_T  nSize,
+    #   SIZE_T  *lpNumberOfBytesWritten
+    # );
+    #
+    # skeleton  = RopChain()
+    # skeleton += 0x41414141                # WriteProcessMemory address
+    # skeleton += 0x42424242                # shellcode return address to return to after WriteProcessMemory is called
+    # skeleton += 0xffffffff                # hProcess (pseudo Process handle)
+    # skeleton += 0x44444444                # lpBaseAddress (Code cave address)
+    # skeleton += 0x45454545                # lpBuffer (shellcode address)
+    # skeleton += 0x46464646                # nSize (size of shellcode)
+    # skeleton += 0x47474747                # lpNumberOfBytesWritten (writable memory address, i.e. !dh -a MODULE)
+    # -------------------------
+    # -------------------------
