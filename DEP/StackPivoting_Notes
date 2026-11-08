@@ -18,6 +18,10 @@ leave; ret
 push <reg>; pop esp
 xchg esp, <reg>
 
+ADD ESP, <REGISTER YOU CONTROL> ; ... ; ret
+SUB ESP, <REGISTER YOU CONTROL> ; ... ; ret
+ADD ESP, <REGISTER YOU CONTROL> ; ... ; ret ; if you need esp - num, but if you dont have SUB gadget, then use ADD + (neg register) ; ret
+
 ========================================================================================
 
 In the case of a SEH based exploit, we have to find a way to return to our payload (on the stack in our case) 
