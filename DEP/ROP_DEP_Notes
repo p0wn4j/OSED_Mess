@@ -26,6 +26,9 @@ STC ; ret gadget => set carry flag
 ---------------
 sub ecx, ebp computes ECX = ECX - EBP.
 sbb ecx, ebp => ecx = ecx - ebp - cf
+---------------
+sometimes when number is smaller byte, you can use or/xor instead of add
+or al, 0x2 ; ret ;
 ================================
 negate register without NEG operator
 neg ecx =>
