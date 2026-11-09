@@ -132,3 +132,9 @@ EBX ← Pop();
 EDX ← Pop();
 ECX ← Pop();
 EAX ← Pop();
+
+==============================
+sete cl
+
+The sete instruction (and its equivalent, setz) sets its argument to 1 if the zero flag is set or to 0 otherwise. 
+The zero flag is set if the last comparison or arithmetic instruction yielded equality or a result of zero. Thus
