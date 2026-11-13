@@ -77,6 +77,11 @@ pop ecx, ret
 0xFFFFFFFF
 not ecx, ret
 
+or 
+
+pop ecx ; ret  ;
+0xFFFFFFFF,
+inc ecx ; ret  ;
 ================================
 mov eax, ebx ; ret analogues
 
