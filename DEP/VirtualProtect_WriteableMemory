@@ -1,0 +1,60 @@
+https://xbz0n.sh/blog/virtualprotect_dep_bypass_guide#5-finding-a-writable-memory-region
+
+For the VirtualProtect call, the lpflOldProtect parameter requires a pointer to a writable memory location. 
+We need to find such a location that is reliable and doesn't contain bad characters in its address.
+
+1) Take some of our DLLs
+
+lm vm kernel32
+
+Output example:
+
+start    end        module name
+764c0000 765b0000   kernel32   (deferred)
+
+So, the base address is 0x764c0000.
+
+2) Now, examine the PE header of KERNEL32.DLL to find its sections:
+Scroll through the output looking for the "SECTION HEADER" information. You are looking for a section with "Write" permissions (often .data).
+
+!dh 0x764c0000
+
+Example output:
+
+[...]
+SECTION HEADER #6
+   .data name
+  5AF4 virtual size
+ 7A000 virtual address (RVA)
+  5C00 size of raw data
+ 78C00 file pointer to raw data
+     0 file pointer to relocation table
+     0 file pointer to line numbers
+     0 number of relocations
+     0 number of line numbers
+40000040 flags
+         Initialized Data
+         Read Write  <-- Writable permissions!
+[...]
+
+
+3) Identify a writable section. The .data section looks promising:
+
+It has Read Write permissions.
+Its Relative Virtual Address (RVA) is 0x7a000.
+
+
+4) Calculate the absolute start address of the .data section:
+
+? <base_address> + <RVA>
+? 0x764c0000 + 0x7a000
+
+Example output:
+
+Evaluate expression: 1985187840 = 7653a000
+
+5) Choose an address within this writable section. We need an address suitable for lpflOldProtect. Not to have bad bytes in it
+For instance 7653a000 + 4
+you can check the address permissions: !vprot 0x7653a004
+
+Protect:           00000004  PAGE_READWRITE  <-- Confirmed Writable
