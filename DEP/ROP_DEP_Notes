@@ -99,4 +99,10 @@ Increment without INC
 
 lea ecx, [ecx + 1]
 ================================
+mov dword [eax], ebx ; ret 
+alternative (where ebx is some sum of ecx+edx)
+
+mov dword [eax], ecx ; ret
+add dword [eax], edx ; ret
+================================
 YOU CAN ALSO TRY gadgets that are ending CALL DWORD [<some_address>] it the call will not harm the state.
