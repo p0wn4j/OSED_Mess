@@ -134,17 +134,27 @@ ECX ← Pop();
 EAX ← Pop();
 
 ==============================
-sete cl
+"sete cl"
 
 The sete instruction (and its equivalent, setz) sets its argument to 1 if the zero flag is set or to 0 otherwise. 
 The zero flag is set if the last comparison or arithmetic instruction yielded equality or a result of zero. Thus
 
 ==============================
 
-rep movsb is an x86/x64 assembly instruction combination used for high-speed memory block copying.
+"rep movsb" is an x86/x64 assembly instruction combination used for high-speed memory block copying.
 
-movsb: Copies a single byte from the source address (stored in DS:ESI or RSI) to the destination address (stored in ES:EDI or RDI). 
+"movsb": Copies a single byte from the source address (stored in DS:ESI or RSI) to the destination address (stored in ES:EDI or RDI). 
 Afterward, it increments or decrements the pointer registers by 1 depending on the state of the Direction Flag (DF).
 
-rep: A repeat prefix that loops the movsb operation ECX (or RCX) times. With each iteration, 
+"rep": A repeat prefix that loops the movsb operation ECX (or RCX) times. With each iteration, 
 it copies one byte and decrements the counter register until ECX or RCX reaches 0.
+
+==============================
+
+"sbb dst, src"
+
+dst = dst - (src + CF)
+
+if sbb dst, dst then => dst = dst - (dst + CF) => dst = -CF
+
+==============================
