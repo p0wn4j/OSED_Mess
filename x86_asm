@@ -158,3 +158,5 @@ dst = dst - (src + CF)
 if sbb dst, dst then => dst = dst - (dst + CF) => dst = -CF
 
 ==============================
+
+clc ; ret gadget  => clear carry flag
