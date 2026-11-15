@@ -82,6 +82,11 @@ or
 pop ecx ; ret  ;
 0xFFFFFFFF,
 inc ecx ; ret  ;
+
+or
+
+clc ; ret ;
+sbb ecx, ecx; ret ;
 ================================
 mov eax, ebx ; ret analogues
 
