@@ -146,6 +146,11 @@ The zero flag is set if the last comparison or arithmetic instruction yielded eq
 "movsb": Copies a single byte from the source address (stored in DS:ESI or RSI) to the destination address (stored in ES:EDI or RDI). 
 Afterward, it increments or decrements the pointer registers by 1 depending on the state of the Direction Flag (DF).
 
+mov al, [esi]
+mov [edi], al
+inc esi ; or dec esi  based on DF flag
+inc edi ; or dec edi  based on DF flag
+
 "rep": A repeat prefix that loops the movsb operation ECX (or RCX) times. With each iteration, 
 it copies one byte and decrements the counter register until ECX or RCX reaches 0.
 
