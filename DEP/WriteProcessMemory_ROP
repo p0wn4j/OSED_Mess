@@ -1,3 +1,5 @@
+https://github.com/RainbowCache/my-osed-scripts/blob/main/windbg_stuff/dep_bypass.txt
+
 BOOL WriteProcessMemory(
   HANDLE  hProcess,
   LPVOID  lpBaseAddress,
