@@ -21,7 +21,7 @@ push\s+eax\s*;(?:\s*[^;]+;)*\s*pop\s+[^;]+
 
 search for push <register> ; anything ; pop ebx
 
-push 0x00000001 ; mov byte [eax], cl ; pop eax ; pop ebp
+push\s+<\w+>[\s\S]*?pop\s+ebx
 ========================================
 search for return 0x<5 numbers>
 
