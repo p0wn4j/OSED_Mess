@@ -15,6 +15,5 @@ match:
     push edi
     mov ebx, 0x69aa7ea4      ; IAT of VirtualProtect
     mov eax, dword ptr [ebx]
-    xor ebx, ebx
     push eax
     ret
