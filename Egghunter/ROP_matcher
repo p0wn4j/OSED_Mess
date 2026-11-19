@@ -4,7 +4,7 @@ https://www.corelan.be/index.php/2011/05/12/hack-notes-ropping-eggs-for-breakfas
 example to call VirtualProtect
 
 match:
-    push 0x61f8c008 ; any writable address
+    push 0x61f8c008 ; any writable address, https://github.com/p0wn4j/OSED_Mess/blob/main/DEP/VirtualProtect_WriteableMemory
     xor eax, eax
     mov al, 0x40
     push eax
