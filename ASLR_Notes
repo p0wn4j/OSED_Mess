@@ -20,3 +20,9 @@ address with the values 0x11 and 0x22, the CPU will process the partially-overwr
 Ox7F801122. This would effectively transfer the execution to our JMP ESP when the function
 returns, eventually running our shellcode.
 ================================================================================================================
+What a leak must satisfy before you spend time on it:
+
+1.  Reachable from the network input you control.
+2.  Output contains a pointer into a module (not only a name, not only a heap or stack address).
+3.  Output comes back to you (reply packet, error message, readable log or file).
+4.  The process survives it, so the overflow can follow.
