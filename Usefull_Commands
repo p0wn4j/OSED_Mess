@@ -47,3 +47,6 @@ print(pattern)
 offset = cyclic_find(0x39694438)
 print(f"Offset: {offset}")
 ============
+set breakpoint on socket receive function:
+
+bp wsock32!recv
