@@ -1,0 +1,29 @@
+==========================================
+ASM
+
+var_8 = -8
+cmp [ebp+var_8], 0xFFFFFFFF
+jnz loc_1
+...
+--------------
+jnz same as jne: jump not equal
+C
+
+if ([ebp+var_8] == 0xFFFFFFFF) {
+  ...
+}
+else {
+  jump loc_1
+}
+--------------
+under the hood
+cmp = [ebp+var_8] - 0xFFFFFFFF
+ZF = 0
+if (cmp == 0) {
+  ZF = 1
+}
+
+if (ZF == 0) {
+  jump loc_1
+}
+==========================================
