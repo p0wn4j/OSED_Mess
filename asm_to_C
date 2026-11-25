@@ -9,17 +9,18 @@ jnz loc_1
 jnz same as jne: jump not equal
 C
 
-if ([ebp+var_8] == 0xFFFFFFFF) {
-  ...
-}
-else {
+if ([ebp+var_8] != 0xFFFFFFFF) {
   jump loc_1
 }
+else {
+  ...
+}
 --------------
+
 under the hood
-cmp = [ebp+var_8] - 0xFFFFFFFF
+diff = [ebp+var_8] - 0xFFFFFFFF
 ZF = 0
-if (cmp == 0) {
+if (diff == 0) {
   ZF = 1
 }
 
