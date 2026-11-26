@@ -50,3 +50,4 @@ print(f"Offset: {offset}")
 set breakpoint on socket receive function:
 
 bp wsock32!recv
+bp WS2_32!recv
