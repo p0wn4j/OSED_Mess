@@ -165,3 +165,20 @@ if sbb dst, dst then => dst = dst - (dst + CF) => dst = -CF
 ==============================
 
 clc ; ret gadget  => clear carry flag
+
+==============================
+
+MOVZX in x86 assembly means Move with Zero-Extend.
+
+It copies a smaller source operand into a larger destination operand and fills the remaining upper bits with zeros.
+
+Syntax:
+MOVZX destination, source
+
+mov al, 0x80
+movzx ebx, al
+
+AL  = 0x80
+EBX = 0x00000080
+
+==============================
