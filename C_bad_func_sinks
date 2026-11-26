@@ -1,0 +1,547 @@
+# Memory-corruption sinks for IDA (non-heap) - generated from ida_sink_finder.py
+# Risk: HIGH = unbounded, FMT = format string, MED = size can be wrong, LOW = secure variant, INFO = source/length
+# IDA may show these with prefixes/suffixes: _name, __imp__name, j_name, name@N, name_0
+
+[HIGH] str-copy  -  unbounded copy until NUL (bad char 00)
+    strcpy
+    wcscpy
+    _mbscpy
+    _mbscpy_l
+    stpcpy
+    wcpcpy
+    lstrcpy
+    lstrcpyA
+    lstrcpyW
+    StrCpyW
+    _tcscpy
+    _ftcscpy
+
+[HIGH] str-cat  -  unbounded append until NUL (bad char 00)
+    strcat
+    wcscat
+    _mbscat
+    _mbscat_l
+    lstrcat
+    lstrcatA
+    lstrcatW
+    StrCatW
+    _tcscat
+
+[MED] str-ncopy  -  check n: source length? bytes vs chars? no NUL when truncated
+    strncpy
+    wcsncpy
+    _mbsncpy
+    _mbsncpy_l
+    _mbsnbcpy
+    _mbsnbcpy_l
+    lstrcpyn
+    lstrcpynA
+    lstrcpynW
+    StrCpyNW
+    strlcpy
+    wcslcpy
+    memccpy
+    _memccpy
+    _tcsncpy
+
+[MED] str-ncat  -  n is chars to APPEND, not buffer size; always adds NUL
+    strncat
+    wcsncat
+    _mbsncat
+    _mbsncat_l
+    _mbsnbcat
+    _mbsnbcat_l
+    StrNCatA
+    StrNCatW
+    StrCatBuffA
+    StrCatBuffW
+    strlcat
+    wcslcat
+    _tcsncat
+
+[HIGH] fmt-buffer  -  no destination size: %s expands without limit
+    sprintf
+    vsprintf
+    swprintf
+    vswprintf
+    _sprintf_l
+    _vsprintf_l
+    _swprintf
+    _vswprintf
+    __swprintf_l
+    __vswprintf_l
+    _stprintf
+    _vstprintf
+    wsprintfA
+    wsprintfW
+    wvsprintfA
+    wvsprintfW
+
+[MED] fmt-nbuffer  -  check size; _snprintf: no NUL on truncation; return value misuse
+    snprintf
+    vsnprintf
+    _snprintf
+    _vsnprintf
+    _snwprintf
+    _vsnwprintf
+    _snprintf_l
+    _vsnprintf_l
+    _snwprintf_l
+    _vsnwprintf_l
+    _sntprintf
+    _vsntprintf
+
+[MED] ucrt-printf  -  UCRT backend: sprintf/snprintf/swprintf compile to these in VS2015+
+    __stdio_common_vsprintf
+    __stdio_common_vsprintf_s
+    __stdio_common_vsnprintf_s
+    __stdio_common_vsprintf_p
+    __stdio_common_vswprintf
+    __stdio_common_vswprintf_s
+    __stdio_common_vsnwprintf_s
+    __stdio_common_vswprintf_p
+
+[MED] num-to-str  -  fixed-size output; radix 2 needs 33+ bytes
+    _itoa
+    _ltoa
+    _ultoa
+    _i64toa
+    _ui64toa
+    itoa
+    ltoa
+    ultoa
+    _itow
+    _ltow
+    _ultow
+    _i64tow
+    _ui64tow
+    _gcvt
+    _ecvt
+    _fcvt
+    gcvt
+    ecvt
+    fcvt
+    strftime
+    wcsftime
+    _strdate
+    _strtime
+    _wstrdate
+    _wstrtime
+
+[FMT] format-string  -  is the FORMAT argument attacker-controlled? (%x leak, %n write)
+    printf
+    wprintf
+    vprintf
+    vwprintf
+    _printf_l
+    _wprintf_l
+    fprintf
+    fwprintf
+    vfprintf
+    vfwprintf
+    _fprintf_l
+    _fwprintf_l
+    dprintf
+    vdprintf
+    _tprintf
+    _ftprintf
+    __stdio_common_vfprintf
+    __stdio_common_vfwprintf
+    __stdio_common_vfprintf_s
+    __stdio_common_vfwprintf_s
+    __stdio_common_vfprintf_p
+    __stdio_common_vfwprintf_p
+    syslog
+    vsyslog
+    err
+    errx
+    warn
+    warnx
+    FormatMessageA
+    FormatMessageW
+
+[HIGH] input-line  -  unbounded read (gets: bad char 0A; scanf %s: whitespace)
+    gets
+    _getws
+    _getts
+    scanf
+    wscanf
+    fscanf
+    fwscanf
+    sscanf
+    swscanf
+    vscanf
+    vwscanf
+    vfscanf
+    vfwscanf
+    vsscanf
+    vswscanf
+    _scanf_l
+    _wscanf_l
+    _fscanf_l
+    _sscanf_l
+    _swscanf_l
+    _cscanf
+    _cwscanf
+    _tscanf
+    _stscanf
+    __stdio_common_vfscanf
+    __stdio_common_vfwscanf
+    __stdio_common_vsscanf
+    __stdio_common_vswscanf
+
+[MED] input-read  -  length > buffer, or length taken from the data itself
+    fgets
+    fgetws
+    _fgetts
+    fread
+    _fread_nolock
+    _read
+    read
+    recv
+    recvfrom
+    WSARecv
+    WSARecvFrom
+    WSARecvEx
+    ReadFile
+    ReadFileEx
+    _lread
+    _hread
+    InternetReadFile
+    InternetReadFileExA
+    InternetReadFileExW
+    WinHttpReadData
+    HttpQueryInfoA
+    HttpQueryInfoW
+    ReadProcessMemory
+    DeviceIoControl
+    PeekNamedPipe
+    ReadConsoleA
+    ReadConsoleW
+
+[MED] mem-copy  -  check the length argument (binary copy: no bad chars)
+    memcpy
+    memmove
+    wmemcpy
+    wmemmove
+    bcopy
+    mempcpy
+    RtlCopyMemory
+    RtlMoveMemory
+    CopyMemory
+    MoveMemory
+    RtlCopyBytes
+    RtlCopyMemoryNonTemporal
+
+[MED] mem-fill  -  check the length argument
+    memset
+    wmemset
+    bzero
+    RtlFillMemory
+    RtlZeroMemory
+    FillMemory
+    ZeroMemory
+    RtlSecureZeroMemory
+    SecureZeroMemory
+
+[MED] conversion  -  chars vs bytes; output can be 2x (wide) or 3x (UTF-8) input
+    MultiByteToWideChar
+    WideCharToMultiByte
+    mbstowcs
+    wcstombs
+    mbsrtowcs
+    wcsrtombs
+    _mbstowcs_l
+    _wcstombs_l
+    wctomb
+    wcrtomb
+    _wctomb_l
+    CharToOemA
+    CharToOemW
+    OemToCharA
+    OemToCharW
+    CharToOemBuffA
+    CharToOemBuffW
+    OemToCharBuffA
+    OemToCharBuffW
+    LCMapStringA
+    LCMapStringW
+    FoldStringA
+    FoldStringW
+    RtlUnicodeToMultiByteN
+    RtlMultiByteToUnicodeN
+    iconv
+
+[MED] path-env  -  MAX_PATH assumptions; return value = REQUIRED size
+    GetModuleFileNameA
+    GetModuleFileNameW
+    GetModuleFileNameExA
+    GetModuleFileNameExW
+    GetModuleBaseNameA
+    GetModuleBaseNameW
+    GetProcessImageFileNameA
+    GetProcessImageFileNameW
+    GetCurrentDirectoryA
+    GetCurrentDirectoryW
+    GetTempPathA
+    GetTempPathW
+    GetSystemDirectoryA
+    GetSystemDirectoryW
+    GetWindowsDirectoryA
+    GetWindowsDirectoryW
+    GetSystemWindowsDirectoryA
+    GetSystemWindowsDirectoryW
+    GetFullPathNameA
+    GetFullPathNameW
+    GetShortPathNameA
+    GetShortPathNameW
+    GetLongPathNameA
+    GetLongPathNameW
+    SearchPathA
+    SearchPathW
+    GetTempFileNameA
+    GetTempFileNameW
+    PathCombineA
+    PathCombineW
+    PathAppendA
+    PathAppendW
+    PathCanonicalizeA
+    PathCanonicalizeW
+    PathAddBackslashA
+    PathAddBackslashW
+    PathAddExtensionA
+    PathAddExtensionW
+    PathRenameExtensionA
+    PathRenameExtensionW
+    PathCompactPathA
+    PathCompactPathW
+    PathCompactPathExA
+    PathCompactPathExW
+    PathRemoveFileSpecA
+    PathStripPathA
+    _makepath
+    _wmakepath
+    _splitpath
+    _wsplitpath
+    realpath
+    getwd
+    getcwd
+    _getcwd
+    _wgetcwd
+    _getdcwd
+    _wgetdcwd
+    ExpandEnvironmentStringsA
+    ExpandEnvironmentStringsW
+    GetEnvironmentVariableA
+    GetEnvironmentVariableW
+    SHGetFolderPathA
+    SHGetFolderPathW
+    SHGetSpecialFolderPathA
+    SHGetSpecialFolderPathW
+    GetComputerNameA
+    GetComputerNameW
+    GetUserNameA
+    GetUserNameW
+
+[MED] registry-ini  -  size > buffer; REG_SZ may lack a NUL terminator
+    RegQueryValueExA
+    RegQueryValueExW
+    RegQueryValueA
+    RegQueryValueW
+    RegGetValueA
+    RegGetValueW
+    SHGetValueA
+    SHGetValueW
+    SHRegGetValueA
+    SHRegGetValueW
+    SHQueryValueExA
+    SHQueryValueExW
+    RegEnumValueA
+    RegEnumValueW
+    RegEnumKeyExA
+    RegEnumKeyExW
+    RegEnumKeyA
+    RegEnumKeyW
+    GetPrivateProfileStringA
+    GetPrivateProfileStringW
+    GetPrivateProfileSectionA
+    GetPrivateProfileSectionW
+    GetPrivateProfileStructA
+    GetPrivateProfileStructW
+    GetProfileStringA
+    GetProfileStringW
+
+[MED] gui-text  -  nMaxCount > buffer; LB_GETTEXT/CB_GETLBTEXT have no size at all
+    GetWindowTextA
+    GetWindowTextW
+    GetDlgItemTextA
+    GetDlgItemTextW
+    SendMessageA
+    SendMessageW
+    SendDlgItemMessageA
+    SendDlgItemMessageW
+    GetClassNameA
+    GetClassNameW
+    GetWindowModuleFileNameA
+    GetWindowModuleFileNameW
+    LoadStringA
+    LoadStringW
+    DragQueryFileA
+    DragQueryFileW
+    GetOpenFileNameA
+    GetOpenFileNameW
+    GetSaveFileNameA
+    GetSaveFileNameW
+    DlgDirSelectExA
+    DlgDirSelectExW
+    GetMenuStringA
+    GetMenuStringW
+
+[MED] tokenize  -  writes NULs into the source; token arrays without count check
+    strtok
+    wcstok
+    _mbstok
+    _tcstok
+    strtok_s
+    wcstok_s
+    strsep
+
+[MED] stack-alloc  -  attacker-controlled size, len+1 wrap, ATL A2W in loops
+    alloca
+    _alloca
+    _alloca_probe
+    _alloca_probe_8
+    _alloca_probe_16
+    _malloca
+    _freea
+    _resetstkoflw
+
+[LOW] secure-variant  -  safer API: verify the size argument and ignored errors
+    strcpy_s
+    wcscpy_s
+    _mbscpy_s
+    strcat_s
+    wcscat_s
+    _mbscat_s
+    strncpy_s
+    wcsncpy_s
+    _mbsncpy_s
+    strncat_s
+    wcsncat_s
+    _mbsncat_s
+    sprintf_s
+    swprintf_s
+    vsprintf_s
+    vswprintf_s
+    _snprintf_s
+    _snwprintf_s
+    _vsnprintf_s
+    _vsnwprintf_s
+    memcpy_s
+    memmove_s
+    wmemcpy_s
+    wmemmove_s
+    gets_s
+    _getws_s
+    scanf_s
+    sscanf_s
+    fscanf_s
+    swscanf_s
+    _itoa_s
+    _ltoa_s
+    _ultoa_s
+    _i64toa_s
+    _itow_s
+    _makepath_s
+    _splitpath_s
+    mbstowcs_s
+    wcstombs_s
+    _strupr_s
+    _strlwr_s
+    StringCchCopyA
+    StringCchCopyW
+    StringCbCopyA
+    StringCbCopyW
+    StringCchCopyNA
+    StringCchCopyNW
+    StringCbCopyNA
+    StringCbCopyNW
+    StringCchCatA
+    StringCchCatW
+    StringCbCatA
+    StringCbCatW
+    StringCchPrintfA
+    StringCchPrintfW
+    StringCbPrintfA
+    StringCbPrintfW
+    StringCchVPrintfA
+    StringCchVPrintfW
+    StringCbVPrintfA
+    StringCbVPrintfW
+
+[INFO] source  -  attacker-controlled data enters here
+    getenv
+    _wgetenv
+    _tgetenv
+    getenv_s
+    _dupenv_s
+    GetCommandLineA
+    GetCommandLineW
+    CommandLineToArgvW
+    GetClipboardData
+    accept
+    WSAAccept
+
+[INFO] length-search  -  lengths/offsets that often become copy sizes
+    strlen
+    wcslen
+    _mbslen
+    lstrlenA
+    lstrlenW
+    lstrlen
+    strnlen
+    wcsnlen
+    strchr
+    wcschr
+    strrchr
+    wcsrchr
+    strstr
+    wcsstr
+    strpbrk
+    strspn
+    strcspn
+    memchr
+    _strupr
+    _strlwr
+    _wcsupr
+    _wcslwr
+    CharUpperA
+    CharLowerA
+
+[INFO] numeric  -  parsed numbers that become sizes/indexes (sign, truncation)
+    atoi
+    atol
+    _atoi64
+    atoll
+    _wtoi
+    _wtol
+    strtol
+    strtoul
+    strtoll
+    strtoull
+    _strtoi64
+    _strtoui64
+    wcstol
+    wcstoul
+    ntohs
+    ntohl
+    htons
+    htonl
+
+[C++ demangled-name rules]
+    [HIGH] cpp-stream     operator>> + char *                           operator>> into char* / char[] (unbounded before C++20)
+    [HIGH] cpp-stream     operator>> + wchar_t *                        operator>> into wchar_t* (unbounded before C++20)
+    [MED] cpp-stream     basic_istream + getline + char *              istream::getline/get with a count: check against buffer
+    [MED] cpp-stream     basic_istream + ::read(                       istream::read with a count: check against buffer
+    [MED] cpp-string     basic_string + ::copy(                        std::string::copy: bounded by count, no NUL added
+    [HIGH] cpp-strstream  strstream                                     strstream/ostrstream on a fixed buffer
