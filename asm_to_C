@@ -30,3 +30,10 @@ if (ZF == 0) {
   jump loc_1
 }
 ==========================================
+memcpy(dst, src, 40);
+
+inline version:
+mov     ecx, 0Ah            ; 40 / 4
+mov     esi, [src]
+mov     edi, [dst]
+rep movsd                   
