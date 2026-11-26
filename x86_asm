@@ -180,5 +180,20 @@ movzx ebx, al
 
 AL  = 0x80
 EBX = 0x00000080
+------------------------------
+movzx   eax, byte ptr [eax]
 
+byte ptr [eax]:
+eax contains a memory address.
+[eax] means access the memory at that address.
+byte ptr means read exactly 1 byte (8 bits) from that memory location.
+
+eax = 0x00401000
+Memory[0x00401000] = 0xAB
+
+After executing:
+movzx eax, byte ptr [eax]
+
+The result is:
+eax = 0x000000AB
 ==============================
